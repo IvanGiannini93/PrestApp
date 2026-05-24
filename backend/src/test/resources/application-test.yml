@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/prestapp_test
+    username: prestapp
+    password: prestapp
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+  flyway:
+    enabled: false
+
+app:
+  jwt:
+    secret: test-secret-key-for-testing-purposes-minimum-256-bits-long-value
+    admin-expiration-ms: 3600000
+    client-expiration-ms: 1800000
+  security:
+    max-failed-attempts: 5
+    lock-duration-minutes: 15
