@@ -8,7 +8,7 @@ Plan de implementación para PrestApp - sistema de gestión de préstamos. El pr
 
 - [x] 1. Setup del proyecto backend: Crear estructura Maven en `backend/`, configurar `pom.xml` con Java 21, Spring Boot 3.x y dependencias (JPA, Security, Validation, Mail, Flyway, PostgreSQL, Lombok, jjwt). Crear `application.yml`, clase principal y estructura de paquetes según Clean Architecture. Agregar `.gitignore`.
 - [x] 2. Setup del proyecto frontend: Crear proyecto React con Vite en `frontend/`, instalar y configurar Tailwind CSS, axios y react-router-dom. Crear estructura de carpetas (api, components, context, hooks, pages, routes, utils). Configurar proxy en `vite.config.js`. Agregar `.gitignore`.
-- [ ] 3. Migraciones de base de datos con Flyway: Crear migraciones para tablas `usuarios`, `clientes`, `prestamos`, `cuotas`. Insertar usuario admin por defecto. Configurar Flyway en Spring Boot.
+- [x] 3. Migraciones de base de datos con Flyway: Crear migraciones para tablas `usuarios`, `clientes`, `prestamos`, `cuotas`. Insertar usuario admin por defecto. Configurar Flyway en Spring Boot.
 - [ ] 4. Capa de dominio - Entidades y enums: Crear enums (`FrecuenciaPago`, `EstadoPrestamo`, `EstadoCuota`, `Rol`), entidades JPA con Lombok (`Usuario`, `Cliente`, `Prestamo`, `Cuota`) e interfaces de repositorio en `domain/repository/`.
 - [ ] 5. Capa de dominio - Servicios de negocio: Implementar `CuotaCalculatorService` (cálculo de montos y fechas según frecuencia, redondeo, residuo en última cuota) y `MoraDetectorService` (detección de cuotas vencidas). Documentar con Javadoc.
 - [ ] 6. Capa de infraestructura - Repositorios JPA: Implementar `JpaClienteRepository`, `JpaPrestamoRepository`, `JpaCuotaRepository`, `JpaUsuarioRepository` con queries personalizadas necesarias.
