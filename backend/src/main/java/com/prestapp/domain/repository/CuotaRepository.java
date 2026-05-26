@@ -36,9 +36,10 @@ public interface CuotaRepository {
      * Persiste una lista de cuotas en la base de datos.
      *
      * @param cuotas lista de entidades a guardar
+     * @param <S> tipo de cuota
      * @return lista de cuotas persistidas
      */
-    List<Cuota> saveAll(List<Cuota> cuotas);
+    <S extends Cuota> List<S> saveAll(Iterable<S> cuotas);
 
     /**
      * Obtiene las cuotas de un préstamo filtradas por estado.
