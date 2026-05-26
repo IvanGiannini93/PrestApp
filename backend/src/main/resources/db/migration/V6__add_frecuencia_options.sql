@@ -1,0 +1,3 @@
+-- V6: Agregar opciones DIARIA y MENSUAL a la columna frecuencia
+-- No se necesita ALTER porque la columna es VARCHAR(20) sin CHECK constraint
+-- Solo documentamos que los valores válidos ahora son: DIARIA, SEMANAL, QUINCENAL, MENSUAL

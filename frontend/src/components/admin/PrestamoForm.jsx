@@ -23,10 +23,9 @@ function PrestamoForm({ onSubmit, loading }) {
 
   useEffect(() => {
     const { monto, tasaInteres, plazo, frecuencia } = form;
-    if (monto && tasaInteres && plazo && frecuencia) {
+    if (monto && tasaInteres && plazo) {
       const total = parseFloat(monto) * (1 + parseFloat(tasaInteres) / 100);
-      const semanasEntreCuotas = frecuencia === 'SEMANAL' ? 1 : 2;
-      const numCuotas = Math.floor(parseInt(plazo) / semanasEntreCuotas);
+      const numCuotas = parseInt(plazo);
       if (numCuotas > 0) {
         setPreview({ total, numCuotas, montoCuota: total / numCuotas });
       } else {
@@ -62,14 +61,16 @@ function PrestamoForm({ onSubmit, loading }) {
           value={form.tasaInteres} onChange={handleChange('tasaInteres')} placeholder="10" min="0.1" max="100" required />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <Input label="Plazo (semanas)" id="plazo" type="number" value={form.plazo}
-          onChange={handleChange('plazo')} placeholder="12" min="1" max="52" required />
+        <Input label="Plazo (cuotas)" id="plazo" type="number" value={form.plazo}
+          onChange={handleChange('plazo')} placeholder="10" min="1" max="365" required />
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Frecuencia</label>
           <select value={form.frecuencia} onChange={handleChange('frecuencia')}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <option value="DIARIA">Diaria</option>
             <option value="SEMANAL">Semanal</option>
             <option value="QUINCENAL">Quincenal</option>
+            <option value="MENSUAL">Mensual</option>
           </select>
         </div>
       </div>

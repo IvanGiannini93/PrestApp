@@ -21,7 +21,10 @@ function PrestamoList({ prestamos, onSelect }) {
   const renderCell = (row, key) => {
     if (key === 'monto' || key === 'saldoRestante') return formatCurrency(row[key]);
     if (key === 'estado') return <StatusBadge status={row[key]} />;
-    if (key === 'frecuencia') return row[key] === 'SEMANAL' ? 'Semanal' : 'Quincenal';
+    if (key === 'frecuencia') {
+      const labels = { DIARIA: 'Diaria', SEMANAL: 'Semanal', QUINCENAL: 'Quincenal', MENSUAL: 'Mensual' };
+      return labels[row[key]] || row[key];
+    }
     return row[key];
   };
 

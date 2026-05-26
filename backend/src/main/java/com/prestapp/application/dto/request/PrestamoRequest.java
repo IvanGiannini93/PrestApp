@@ -38,15 +38,15 @@ public class PrestamoRequest {
     @DecimalMax(value = "100", message = "La tasa de interés máxima es 100%")
     private BigDecimal tasaInteres;
 
-    /** Plazo en semanas (entre 1 y 52). */
+    /** Plazo: número de cuotas (entre 1 y 365). */
     @NotNull(message = "El plazo es obligatorio")
-    @Min(value = 1, message = "El plazo mínimo es 1 semana")
-    @Max(value = 52, message = "El plazo máximo es 52 semanas")
+    @Min(value = 1, message = "El plazo mínimo es 1 cuota")
+    @Max(value = 365, message = "El plazo máximo es 365 cuotas")
     private Integer plazo;
 
-    /** Frecuencia de pago: SEMANAL o QUINCENAL. */
+    /** Frecuencia de pago: DIARIA, SEMANAL, QUINCENAL o MENSUAL. */
     @NotBlank(message = "La frecuencia de pago es obligatoria")
-    @Pattern(regexp = "SEMANAL|QUINCENAL", message = "La frecuencia debe ser SEMANAL o QUINCENAL")
+    @Pattern(regexp = "DIARIA|SEMANAL|QUINCENAL|MENSUAL", message = "La frecuencia debe ser DIARIA, SEMANAL, QUINCENAL o MENSUAL")
     private String frecuencia;
 
     /** Fecha de inicio del préstamo. */

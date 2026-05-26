@@ -8,11 +8,17 @@ package com.prestapp.domain.model.enums;
  */
 public enum FrecuenciaPago {
 
+    /** Pago cada día. */
+    DIARIA(1),
+
     /** Pago cada 7 días. */
     SEMANAL(7),
 
     /** Pago cada 14 días. */
-    QUINCENAL(14);
+    QUINCENAL(14),
+
+    /** Pago cada 30 días. */
+    MENSUAL(30);
 
     private final int diasEntreCuotas;
 

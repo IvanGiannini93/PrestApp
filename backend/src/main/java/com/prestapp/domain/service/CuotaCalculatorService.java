@@ -46,12 +46,11 @@ public class CuotaCalculatorService {
      */
     public List<Cuota> calcularCuotas(Prestamo prestamo) {
         BigDecimal montoTotal = calcularMontoTotal(prestamo.getMonto(), prestamo.getTasaInteres());
-        int numeroCuotas = calcularNumeroCuotas(prestamo.getPlazo(), prestamo.getFrecuencia());
+        int numeroCuotas = prestamo.getPlazo();
 
         if (numeroCuotas < 1) {
             throw new IllegalArgumentException(
-                    "La combinación de plazo y frecuencia produce menos de una cuota. " +
-                    "Plazo: " + prestamo.getPlazo() + " semanas, Frecuencia: " + prestamo.getFrecuencia()
+                    "El plazo debe ser al menos 1 cuota. Plazo: " + prestamo.getPlazo()
             );
         }
 
@@ -93,20 +92,15 @@ public class CuotaCalculatorService {
     }
 
     /**
-     * Calcula el número de cuotas según el plazo y la frecuencia.
-     * <p>
-     * El plazo se expresa en semanas. Para frecuencia semanal, el número
-     * de cuotas es igual al plazo. Para quincenal, es el plazo dividido
-     * entre 2 (cada cuota cubre 2 semanas).
-     * </p>
+     * Calcula el número de cuotas (ahora es directamente el plazo).
      *
-     * @param plazoEnSemanas plazo del préstamo en semanas
-     * @param frecuencia     frecuencia de pago
-     * @return número de cuotas a generar
+     * @param plazo número de cuotas
+     * @param frecuencia frecuencia de pago (no afecta el cálculo)
+     * @return número de cuotas
+     * @deprecated El plazo ahora representa directamente el número de cuotas
      */
-    public int calcularNumeroCuotas(int plazoEnSemanas, FrecuenciaPago frecuencia) {
-        int semanasEntreCuotas = frecuencia.getDiasEntreCuotas() / 7;
-        return plazoEnSemanas / semanasEntreCuotas;
+    public int calcularNumeroCuotas(int plazo, FrecuenciaPago frecuencia) {
+        return plazo;
     }
 
     /**
