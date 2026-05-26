@@ -11,13 +11,23 @@ export function usePrestamos() {
   const [prestamoActual, setPrestamoActual] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
 
   const fetchPrestamos = useCallback(async (page = 0, size = 20) => {
     setLoading(true);
     setError(null);
     try {
       const response = await getPrestamos(page, size);
-      setPrestamos(response.data.data);
+      const data = response.data.data;
+      // Spring Page response has content, totalPages, etc.
+      if (data && data.content) {
+        setPrestamos(data.content);
+        setTotalPages(data.totalPages || 0);
+      } else if (Array.isArray(data)) {
+        setPrestamos(data);
+      } else {
+        setPrestamos([]);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Error al cargar préstamos');
     } finally {
@@ -43,7 +53,6 @@ export function usePrestamos() {
     setError(null);
     try {
       const response = await createPrestamo(data);
-      setPrestamos((prev) => [...prev, response.data.data]);
       return response.data;
     } catch (err) {
       setError(err.response?.data?.message || 'Error al crear préstamo');
@@ -58,6 +67,7 @@ export function usePrestamos() {
     prestamoActual,
     loading,
     error,
+    totalPages,
     fetchPrestamos,
     fetchPrestamo,
     addPrestamo,

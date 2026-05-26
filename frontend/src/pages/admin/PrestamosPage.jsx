@@ -10,7 +10,7 @@ import { registrarPago } from '../../api/cuotaApi';
  * Página de gestión de préstamos (admin).
  */
 function PrestamosPage() {
-  const { prestamos, prestamoActual, loading, error, fetchPrestamos, fetchPrestamo, addPrestamo } = usePrestamos();
+  const { prestamos, prestamoActual, loading, error, totalPages, fetchPrestamos, fetchPrestamo, addPrestamo } = usePrestamos();
   const [showForm, setShowForm] = useState(false);
   const [page, setPage] = useState(0);
   const [view, setView] = useState('list');
@@ -63,7 +63,7 @@ function PrestamosPage() {
       <div className="bg-white rounded-lg shadow">
         <PrestamoList prestamos={prestamos} onSelect={handleSelect} />
       </div>
-      <Pagination currentPage={page} totalPages={5} onPageChange={setPage} />
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }
