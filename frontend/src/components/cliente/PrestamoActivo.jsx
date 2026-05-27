@@ -1,6 +1,6 @@
 import StatusBadge from '../common/StatusBadge';
 import CuotasPendientes from './CuotasPendientes';
-import { formatCurrency, formatPercent } from '../../utils/formatters';
+import { formatCurrency } from '../../utils/formatters';
 
 /**
  * Vista de préstamos activos del cliente con acordeón de cuotas.
@@ -53,18 +53,10 @@ function PrestamoActivo({ prestamos, onSelect, expandedId, cuotas, loadingCuotas
                 <StatusBadge status={prestamo.estado} />
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+              <div className="grid grid-cols-2 gap-4 mt-4">
                 <div>
                   <p className="text-xs text-gray-500">Monto Total</p>
                   <p className="font-semibold">{formatCurrency(prestamo.monto)}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Saldo Restante</p>
-                  <p className="font-semibold text-primary-600">{formatCurrency(prestamo.saldoRestante)}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Tasa</p>
-                  <p className="font-semibold">{formatPercent(prestamo.tasaInteres)}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Cuotas Pendientes</p>
