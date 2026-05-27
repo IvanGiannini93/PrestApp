@@ -111,4 +111,24 @@ public class AuthUseCase {
             usuarioRepository.save(usuario);
         }
     }
+
+    /**
+     * Cambia la contraseña del usuario autenticado.
+     *
+     * @param username nombre de usuario
+     * @param request  DTO con contraseña actual y nueva
+     * @throws IllegalArgumentException si la contraseña actual es incorrecta
+     */
+    @Transactional
+    public void cambiarPassword(String username, com.prestapp.application.dto.request.CambiarPasswordRequest request) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), usuario.getPassword())) {
+            throw new IllegalArgumentException("La contraseña actual es incorrecta");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        usuarioRepository.save(usuario);
+    }
 }

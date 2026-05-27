@@ -43,7 +43,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/cambiar-password").authenticated()
                         .requestMatchers("/api/v1/clientes/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/prestamos/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/cuotas/**").hasRole("ADMIN")
