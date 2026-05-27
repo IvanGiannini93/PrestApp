@@ -1,19 +1,28 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { login } from '../api/authApi';
 
 /**
  * Página de login.
  * Formulario de autenticación para administradores y clientes.
+ * Si ya está logueado, redirige al dashboard correspondiente.
  */
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login: authLogin } = useAuth();
+  const { login: authLogin, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+
+  // Si ya está logueado, redirigir al dashboard
+  if (isAuthenticated && user) {
+    if (user.rol === 'ADMIN') {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
+    return <Navigate to="/cliente/mi-prestamo" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,9 +35,9 @@ function LoginPage() {
       authLogin(token, { username: user, rol });
 
       if (rol === 'ADMIN') {
-        navigate('/admin/dashboard');
+        navigate('/admin/dashboard', { replace: true });
       } else {
-        navigate('/cliente/mi-prestamo');
+        navigate('/cliente/mi-prestamo', { replace: true });
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Error al iniciar sesión');
