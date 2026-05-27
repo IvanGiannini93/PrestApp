@@ -30,7 +30,7 @@ function PrestamoActivo({ prestamos, onSelect, expandedId, cuotas, loadingCuotas
 
   return (
     <div className="space-y-4">
-      {prestamos.map((prestamo) => {
+      {prestamos.map((prestamo, index) => {
         const isExpanded = expandedId === prestamo.id;
 
         return (
@@ -46,7 +46,7 @@ function PrestamoActivo({ prestamos, onSelect, expandedId, cuotas, loadingCuotas
                     ▶
                   </span>
                   <div>
-                    <p className="text-lg font-bold text-gray-800">Préstamo #{prestamo.id}</p>
+                    <p className="text-lg font-bold text-gray-800">Préstamo #{index + 1}</p>
                     <p className="text-sm text-gray-500">{frecuenciaLabels[prestamo.frecuencia] || prestamo.frecuencia}</p>
                   </div>
                 </div>
