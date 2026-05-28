@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { login } from '../api/authApi';
+import logoBanner from '../resources/logos/logo-encabezado-banner.png';
 
 /**
  * Página de login.
@@ -50,8 +51,8 @@ function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-600">PrestApp</h1>
-          <p className="text-gray-500 mt-2">Gestión de Préstamos</p>
+          <img src={logoBanner} alt="PrestApp" className="h-16 w-auto mx-auto mb-4" />
+          <p className="text-gray-500">Gestión de Préstamos</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
