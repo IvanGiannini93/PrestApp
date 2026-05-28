@@ -37,7 +37,7 @@ public class EmailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
-            message.setFrom("noreply@prestapp.com");
+            message.setFrom("PrestApp <ivan.giannini.work@gmail.com>");
 
             mailSender.send(message);
             log.info("Email enviado exitosamente a: {}", to);
