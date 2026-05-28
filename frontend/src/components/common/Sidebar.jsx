@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import logo from '../../resources/logos/logo.png';
@@ -9,6 +10,7 @@ import logo from '../../resources/logos/logo.png';
 function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [logoLoaded, setLogoLoaded] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -40,14 +42,14 @@ function Sidebar() {
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200 flex flex-col items-center">
-        <img
-          src={logo}
-          alt="PrestApp"
-          className="h-12 w-auto mb-2"
-          loading="eager"
-          decoding="sync"
-          fetchPriority="high"
-        />
+        <div className="h-20 mb-2 flex items-center justify-center">
+          <img
+            src={logo}
+            alt="PrestApp"
+            className={`h-20 w-auto transition-opacity duration-200 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setLogoLoaded(true)}
+          />
+        </div>
         <p className="text-xs text-gray-500">
           {user?.rol === 'ADMIN' ? 'Panel Administrador' : 'Portal Cliente'}
         </p>
