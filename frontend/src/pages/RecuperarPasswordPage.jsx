@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import api from '../api/axiosConfig';
-import logoBanner from '../resources/logos/logo.jpg';
+import logoBanner from '../resources/logos/logo.png';
 
 /**
  * Página de recuperación de contraseña.
