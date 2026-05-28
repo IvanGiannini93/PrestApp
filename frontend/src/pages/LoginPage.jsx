@@ -51,7 +51,7 @@ function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
         <div className="text-center mb-8">
-          <img src={logoBanner} alt="PrestApp" className="h-16 w-auto mx-auto mb-4" />
+          <img src={logoBanner} alt="PrestApp" className="h-32 w-auto mx-auto mb-4" />
           <p className="text-gray-500">Gestión de Préstamos</p>
         </div>
 
