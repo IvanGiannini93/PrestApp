@@ -22,6 +22,9 @@ public class ClienteResponse {
     /** Identificador del cliente. */
     private Long id;
 
+    /** Número de documento. */
+    private String documento;
+
     /** Razón social del comercio. */
     private String razonSocial;
 

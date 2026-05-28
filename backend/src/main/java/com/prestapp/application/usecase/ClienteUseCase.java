@@ -54,11 +54,15 @@ public class ClienteUseCase {
      */
     @Transactional
     public ClienteResponse registrar(ClienteRequest request) {
-        if (clienteRepository.existsByRazonSocialAndResponsable(
-                request.getRazonSocial(), request.getResponsable())) {
+        if (clienteRepository.existsByDocumento(request.getDocumento())) {
             throw new DuplicateResourceException(
-                    "Ya existe un cliente con la razón social '" + request.getRazonSocial() +
-                    "' y responsable '" + request.getResponsable() + "'"
+                    "Ya existe un cliente con el documento '" + request.getDocumento() + "'"
+            );
+        }
+
+        if (clienteRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException(
+                    "Ya existe un cliente con el email '" + request.getEmail() + "'"
             );
         }
 

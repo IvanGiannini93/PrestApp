@@ -10,11 +10,12 @@ import { validateRequired, validateEmail, validatePhone } from '../../utils/vali
  * @param {boolean} props.loading - Estado de carga
  */
 function ClienteForm({ onSubmit, loading }) {
-  const [form, setForm] = useState({ razonSocial: '', responsable: '', telefono: '', email: '' });
+  const [form, setForm] = useState({ documento: '', razonSocial: '', responsable: '', telefono: '', email: '' });
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
+    newErrors.documento = validateRequired(form.documento, 'Documento');
     newErrors.razonSocial = validateRequired(form.razonSocial, 'Razón social');
     newErrors.responsable = validateRequired(form.responsable, 'Responsable');
     newErrors.telefono = validatePhone(form.telefono);
@@ -39,6 +40,8 @@ function ClienteForm({ onSubmit, loading }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <Input label="Documento (DNI/CUIT)" id="documento" value={form.documento}
+        onChange={handleChange('documento')} error={errors.documento} placeholder="12345678 o 20-12345678-9" />
       <Input label="Razón Social" id="razonSocial" value={form.razonSocial}
         onChange={handleChange('razonSocial')} error={errors.razonSocial} placeholder="Nombre del comercio" />
       <Input label="Responsable" id="responsable" value={form.responsable}

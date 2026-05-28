@@ -26,6 +26,7 @@ public class ClienteMapper {
      */
     public Cliente toEntity(ClienteRequest request) {
         return Cliente.builder()
+                .documento(request.getDocumento())
                 .razonSocial(request.getRazonSocial())
                 .responsable(request.getResponsable())
                 .telefono(request.getTelefono())
@@ -42,6 +43,7 @@ public class ClienteMapper {
     public ClienteResponse toResponse(Cliente cliente) {
         return ClienteResponse.builder()
                 .id(cliente.getId())
+                .documento(cliente.getDocumento())
                 .razonSocial(cliente.getRazonSocial())
                 .responsable(cliente.getResponsable())
                 .telefono(cliente.getTelefono())

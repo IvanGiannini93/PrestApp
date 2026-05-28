@@ -1,5 +1,4 @@
 import Table from '../common/Table';
-import { formatDate } from '../../utils/formatters';
 
 /**
  * Lista de clientes en formato tabla.
@@ -9,15 +8,14 @@ import { formatDate } from '../../utils/formatters';
  */
 function ClienteList({ clientes, onSelect }) {
   const columns = [
+    { key: 'documento', label: 'Documento' },
     { key: 'razonSocial', label: 'Razón Social' },
     { key: 'responsable', label: 'Responsable' },
     { key: 'telefono', label: 'Teléfono' },
     { key: 'email', label: 'Email' },
-    { key: 'createdAt', label: 'Registrado' },
   ];
 
   const renderCell = (row, key) => {
-    if (key === 'createdAt') return formatDate(row[key]);
     return row[key];
   };
 

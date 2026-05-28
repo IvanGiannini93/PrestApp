@@ -21,6 +21,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ClienteRequest {
 
+    /** Número de documento DNI/CUIT (único por cliente). */
+    @NotBlank(message = "El documento es obligatorio")
+    @Size(max = 20, message = "El documento no puede exceder 20 caracteres")
+    private String documento;
+
     /** Razón social del comercio (máximo 150 caracteres). */
     @NotBlank(message = "La razón social es obligatoria")
     @Size(max = 150, message = "La razón social no puede exceder 150 caracteres")

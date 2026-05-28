@@ -45,4 +45,20 @@ public interface ClienteRepository {
      * @return true si existe un duplicado, false en caso contrario
      */
     boolean existsByRazonSocialAndResponsable(String razonSocial, String responsable);
+
+    /**
+     * Verifica si existe un cliente con el documento dado.
+     *
+     * @param documento número de documento
+     * @return true si existe, false en caso contrario
+     */
+    boolean existsByDocumento(String documento);
+
+    /**
+     * Verifica si existe un cliente con el email dado.
+     *
+     * @param email correo electrónico
+     * @return true si existe, false en caso contrario
+     */
+    boolean existsByEmail(String email);
 }

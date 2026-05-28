@@ -16,10 +16,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "clientes",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uq_clientes_razon_responsable",
-                columnNames = {"razon_social", "responsable"}
-        ))
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_clientes_documento", columnNames = {"documento"}),
+                @UniqueConstraint(name = "uk_clientes_email", columnNames = {"email"})
+        })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,6 +31,10 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /** Número de documento (DNI/CUIT) - identificador único del cliente. */
+    @Column(nullable = false, unique = true, length = 20)
+    private String documento;
 
     /** Razón social o nombre del comercio. */
     @Column(name = "razon_social", nullable = false, length = 150)
@@ -44,8 +48,8 @@ public class Cliente {
     @Column(nullable = false, length = 20)
     private String telefono;
 
-    /** Correo electrónico de contacto. */
-    @Column(nullable = false, length = 100)
+    /** Correo electrónico de contacto (único). */
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
     /** Préstamos asociados al cliente. */
