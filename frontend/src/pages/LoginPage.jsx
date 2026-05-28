@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { login } from '../api/authApi';
-import logoBanner from '../resources/logos/logo-encabezado-banner.png';
+import logoBanner from '../resources/logos/logo-png-transparente.png';
 
 /**
  * Página de login.
