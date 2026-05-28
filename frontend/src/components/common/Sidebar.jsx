@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import logo from '../../resources/logos/logo.jpg';
+import logo from '../../resources/logos/logo-encabezado-banner.png';
 
 /**
  * Sidebar de navegación lateral.
@@ -40,7 +40,7 @@ function Sidebar() {
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200 flex flex-col items-center">
-        <img src={logo} alt="PrestApp" className="h-12 w-auto mb-2" />
+        <img src={logo} alt="PrestApp" className="h-12 w-auto mb-2" loading="eager" decoding="sync" />
         <p className="text-xs text-gray-500">
           {user?.rol === 'ADMIN' ? 'Panel Administrador' : 'Portal Cliente'}
         </p>
