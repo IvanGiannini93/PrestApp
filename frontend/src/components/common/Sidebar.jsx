@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import logo from '../../resources/logos/logo.png';
+import logo from '../../resources/logos/logo.jpg';
 
 /**
  * Sidebar de navegación lateral.
