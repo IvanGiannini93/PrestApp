@@ -28,9 +28,13 @@ function CuotasPendientes({ cuotas }) {
     return { bg: 'bg-white border-gray-200', text: 'text-gray-800', label: 'Pendiente' };
   };
 
+  const sortedCuotas = [...cuotas].sort((a, b) =>
+    new Date(a.fechaVencimiento) - new Date(b.fechaVencimiento)
+  );
+
   return (
     <div className="space-y-3">
-      {cuotas.map((cuota) => {
+      {sortedCuotas.map((cuota) => {
         const visual = getEstadoVisual(cuota);
         return (
           <div key={cuota.id} className={`border rounded-lg p-4 ${visual.bg}`}>

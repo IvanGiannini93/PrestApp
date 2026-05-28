@@ -27,7 +27,7 @@ function CuotaList({ cuotas, onPagar }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {cuotas.map((cuota) => (
+          {[...cuotas].sort((a, b) => new Date(a.fechaVencimiento) - new Date(b.fechaVencimiento)).map((cuota) => (
             <tr key={cuota.id}>
               <td className="px-4 py-3 text-sm">{cuota.numeroCuota}</td>
               <td className="px-4 py-3 text-sm font-medium">{formatCurrency(cuota.monto)}</td>
