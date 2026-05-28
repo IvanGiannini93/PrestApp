@@ -58,7 +58,10 @@ function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
-              {error}
+              <p>{error}</p>
+              <a href="/recuperar-password" className="text-red-800 underline text-xs mt-1 inline-block">
+                ¿Olvidaste tu contraseña?
+              </a>
             </div>
           )}
 

@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
+import RecuperarPasswordPage from '../pages/RecuperarPasswordPage';
 import AdminRoute from './AdminRoute';
 import ClienteRoute from './ClienteRoute';
 import Layout from '../components/common/Layout';
@@ -20,6 +21,7 @@ function AppRouter() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/recuperar-password" element={<RecuperarPasswordPage />} />
 
       {/* Rutas Admin */}
       <Route path="/admin/dashboard" element={<AdminRoute><Layout><DashboardPage /></Layout></AdminRoute>} />

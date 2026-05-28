@@ -4,6 +4,7 @@ import com.prestapp.application.dto.request.LoginRequest;
 import com.prestapp.application.dto.response.LoginResponse;
 import com.prestapp.domain.model.Usuario;
 import com.prestapp.domain.repository.UsuarioRepository;
+import com.prestapp.infrastructure.external.EmailService;
 import com.prestapp.infrastructure.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ public class AuthUseCase {
     private final UsuarioRepository usuarioRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Value("${app.security.max-failed-attempts}")
     private int maxFailedAttempts;
@@ -130,5 +132,72 @@ public class AuthUseCase {
 
         usuario.setPassword(passwordEncoder.encode(request.getNewPassword()));
         usuarioRepository.save(usuario);
+    }
+
+    /**
+     * Solicita la recuperación de contraseña.
+     * <p>
+     * Genera un token de 6 dígitos, lo almacena en el usuario con una
+     * expiración de 15 minutos y envía un email con el código.
+     * </p>
+     *
+     * @param username nombre de usuario que solicita la recuperación
+     * @throws IllegalArgumentException si el usuario no existe
+     */
+    @Transactional
+    public void solicitarRecuperacion(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Si el usuario existe, recibirá un email con instrucciones"));
+
+        // Generar token de 6 dígitos
+        String token = String.format("%06d", new java.util.Random().nextInt(999999));
+        usuario.setResetToken(token);
+        usuario.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
+        usuarioRepository.save(usuario);
+
+        // Enviar email (si tiene email asociado)
+        String email = obtenerEmailUsuario(usuario);
+        if (email != null) {
+            emailService.sendEmail(email,
+                    "PrestApp - Recuperación de contraseña",
+                    "Tu código de recuperación es: " + token + "\n\nEste código expira en 15 minutos."
+            );
+        }
+    }
+
+    /**
+     * Resetea la contraseña usando el token de recuperación.
+     *
+     * @param token       token de recuperación
+     * @param newPassword nueva contraseña
+     * @throws IllegalArgumentException si el token es inválido o expiró
+     */
+    @Transactional
+    public void resetearPassword(String token, String newPassword) {
+        Usuario usuario = usuarioRepository.findByResetToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Código de recuperación inválido"));
+
+        if (usuario.getResetTokenExpiry() == null || usuario.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("El código de recuperación ha expirado");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(newPassword));
+        usuario.setResetToken(null);
+        usuario.setResetTokenExpiry(null);
+        usuario.setIntentosFallidos(0);
+        usuario.setBloqueadoHasta(null);
+        usuarioRepository.save(usuario);
+    }
+
+    /**
+     * Obtiene el email del usuario (directo si es el username, o del cliente asociado).
+     */
+    private String obtenerEmailUsuario(Usuario usuario) {
+        // Si el username parece un email, usarlo directamente
+        if (usuario.getUsername().contains("@")) {
+            return usuario.getUsername();
+        }
+        // Para admin u otros, no tenemos email directo
+        return null;
     }
 }

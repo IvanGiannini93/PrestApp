@@ -36,4 +36,12 @@ public interface UsuarioRepository {
      * @return true si existe, false en caso contrario
      */
     boolean existsByUsername(String username);
+
+    /**
+     * Busca un usuario por su token de recuperación de contraseña.
+     *
+     * @param resetToken token de recuperación
+     * @return Optional con el usuario encontrado o vacío si no existe
+     */
+    Optional<Usuario> findByResetToken(String resetToken);
 }

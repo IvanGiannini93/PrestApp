@@ -2,6 +2,8 @@ package com.prestapp.web.controller;
 
 import com.prestapp.application.dto.request.CambiarPasswordRequest;
 import com.prestapp.application.dto.request.LoginRequest;
+import com.prestapp.application.dto.request.RecuperarPasswordRequest;
+import com.prestapp.application.dto.request.ResetPasswordRequest;
 import com.prestapp.application.dto.response.ApiResponse;
 import com.prestapp.application.dto.response.LoginResponse;
 import com.prestapp.application.usecase.AuthUseCase;
@@ -59,5 +61,36 @@ public class AuthController {
             @AuthenticationPrincipal JwtAuthenticatedUser user) {
         authUseCase.cambiarPassword(user.getUsername(), request);
         return ResponseEntity.ok(ApiResponse.success(null, "Contraseña actualizada exitosamente"));
+    }
+
+    /**
+     * Solicita la recuperación de contraseña.
+     * Envía un código de 6 dígitos al email del usuario.
+     *
+     * @param request DTO con el username
+     * @return confirmación (siempre exitosa por seguridad)
+     */
+    @PostMapping("/recuperar-password")
+    public ResponseEntity<ApiResponse<Void>> recuperarPassword(
+            @Valid @RequestBody RecuperarPasswordRequest request) {
+        try {
+            authUseCase.solicitarRecuperacion(request.getUsername());
+        } catch (Exception e) {
+            // No revelar si el usuario existe o no
+        }
+        return ResponseEntity.ok(ApiResponse.success(null, "Si el usuario existe, recibirá un email con el código de recuperación"));
+    }
+
+    /**
+     * Resetea la contraseña usando el código de recuperación.
+     *
+     * @param request DTO con token y nueva contraseña
+     * @return confirmación del reset
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+        authUseCase.resetearPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok(ApiResponse.success(null, "Contraseña restablecida exitosamente"));
     }
 }

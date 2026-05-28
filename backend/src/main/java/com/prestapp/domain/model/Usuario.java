@@ -53,6 +53,14 @@ public class Usuario {
     @Column(name = "bloqueado_hasta")
     private LocalDateTime bloqueadoHasta;
 
+    /** Token para recuperación de contraseña. */
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    /** Fecha de expiración del token de recuperación. */
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+
     /** Fecha de creación del registro. */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
