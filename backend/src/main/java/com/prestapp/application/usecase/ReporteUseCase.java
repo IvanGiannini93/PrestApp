@@ -1,5 +1,6 @@
 package com.prestapp.application.usecase;
 
+import com.prestapp.application.dto.response.ProximaCuotaResponse;
 import com.prestapp.application.dto.response.ReporteCobranzaResponse;
 import com.prestapp.domain.model.Cuota;
 import com.prestapp.domain.model.enums.EstadoCuota;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -83,5 +85,42 @@ public class ReporteUseCase {
         return cuotas.stream()
                 .map(Cuota::getMonto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * Obtiene las próximas N cuotas a cobrar (pendientes, ordenadas por fecha).
+     *
+     * @param limit cantidad máxima de cuotas a devolver
+     * @return lista de próximas cuotas con datos del cliente
+     */
+    @Transactional(readOnly = true)
+    public List<ProximaCuotaResponse> proximasCuotas(int limit) {
+        List<Cuota> todasLasCuotas = cuotaRepository.findAllByPrestamoEstadoActivo();
+        LocalDate hoy = LocalDate.now();
+
+        return todasLasCuotas.stream()
+                .filter(c -> c.getEstado() != EstadoCuota.PAGADA)
+                .filter(c -> !c.getFechaVencimiento().isBefore(hoy))
+                .sorted(Comparator.comparing(Cuota::getFechaVencimiento))
+                .limit(limit)
+                .map(this::toProximaCuotaResponse)
+                .toList();
+    }
+
+    /**
+     * Convierte una cuota a DTO de próxima cuota con datos del cliente.
+     */
+    private ProximaCuotaResponse toProximaCuotaResponse(Cuota cuota) {
+        return ProximaCuotaResponse.builder()
+                .cuotaId(cuota.getId())
+                .clienteNombre(cuota.getPrestamo().getCliente().getRazonSocial())
+                .clienteDocumento(cuota.getPrestamo().getCliente().getDocumento())
+                .numeroCuota(cuota.getNumeroCuota())
+                .monto(cuota.getMonto())
+                .fechaVencimiento(cuota.getFechaVencimiento())
+                .estado(cuota.getEstado().name())
+                .frecuencia(cuota.getPrestamo().getFrecuencia().name())
+                .totalCuotas(cuota.getPrestamo().getPlazo())
+                .build();
     }
 }
