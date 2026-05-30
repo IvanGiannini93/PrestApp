@@ -17,15 +17,17 @@ function Sidebar() {
     navigate('/login', { replace: true });
   };
 
+  const homeRoute = user?.rol === 'ADMIN' ? '/admin/dashboard' : '/cliente/mi-prestamo';
+
   const adminLinks = [
-    { to: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+    { to: '/admin/dashboard', label: 'Home', icon: '🏠' },
     { to: '/admin/clientes', label: 'Clientes', icon: '👥' },
     { to: '/admin/prestamos', label: 'Préstamos', icon: '💰' },
     { to: '/admin/reportes', label: 'Reportes', icon: '📈' },
   ];
 
   const clienteLinks = [
-    { to: '/cliente/mi-prestamo', label: 'Mis Préstamos', icon: '💰' },
+    { to: '/cliente/mi-prestamo', label: 'Home', icon: '🏠' },
     { to: '/cliente/historial', label: 'Historial', icon: '📋' },
   ];
 
@@ -40,8 +42,8 @@ function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-200 flex flex-col items-center">
+      {/* Logo - clickeable, redirige al home */}
+      <div className="p-6 border-b border-gray-200 flex flex-col items-center cursor-pointer" onClick={() => navigate(homeRoute)}>
         <div className="h-20 mb-2 flex items-center justify-center">
           <img
             src={logo}
