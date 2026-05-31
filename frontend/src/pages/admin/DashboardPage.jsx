@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axiosConfig';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
 
 /**
@@ -22,15 +21,46 @@ function DashboardPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Dashboard</h2>
-        <div className="flex gap-3">
-          <Button onClick={() => navigate('/admin/clientes')} variant="secondary">
-            + Nuevo Cliente
-          </Button>
-          <Button onClick={() => navigate('/admin/prestamos')}>
-            + Nuevo Préstamo
-          </Button>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-800">Home</h2>
+      </div>
+
+      {/* Atajos estilo Mercado Pago */}
+      <div className="flex gap-6 mb-8">
+        <button
+          onClick={() => navigate('/admin/clientes')}
+          className="flex flex-col items-center gap-2 group"
+        >
+          <div className="w-14 h-14 rounded-full bg-primary-100 flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+            <svg className="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+          </div>
+          <span className="text-xs text-gray-600 font-medium">Nuevo Cliente</span>
+        </button>
+
+        <button
+          onClick={() => navigate('/admin/prestamos')}
+          className="flex flex-col items-center gap-2 group"
+        >
+          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors">
+            <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span className="text-xs text-gray-600 font-medium">Nuevo Préstamo</span>
+        </button>
+
+        <button
+          onClick={() => navigate('/admin/reportes')}
+          className="flex flex-col items-center gap-2 group"
+        >
+          <div className="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+            <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <span className="text-xs text-gray-600 font-medium">Reportes</span>
+        </button>
       </div>
 
       {/* Resumen de cobranza */}
