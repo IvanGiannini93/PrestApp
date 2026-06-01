@@ -55,7 +55,12 @@ export function usePrestamos() {
       const response = await createPrestamo(data);
       return response.data;
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al crear préstamo');
+      const responseData = err.response?.data;
+      if (responseData?.errors && responseData.errors.length > 0) {
+        setError(responseData.errors.join('. '));
+      } else {
+        setError(responseData?.message || 'Error al crear préstamo');
+      }
       throw err;
     } finally {
       setLoading(false);

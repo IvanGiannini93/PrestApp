@@ -51,6 +51,6 @@ public class PrestamoRequest {
 
     /** Fecha de inicio del préstamo. */
     @NotNull(message = "La fecha de inicio es obligatoria")
-    @FutureOrPresent(message = "La fecha de inicio no puede ser en el pasado")
+    @FutureOrPresent(message = "La fecha de inicio no puede ser anterior a hoy")
     private LocalDate fechaInicio;
 }

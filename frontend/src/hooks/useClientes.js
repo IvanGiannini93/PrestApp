@@ -32,7 +32,12 @@ export function useClientes() {
       setClientes((prev) => [...prev, response.data.data]);
       return response.data;
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al crear cliente');
+      const responseData = err.response?.data;
+      if (responseData?.errors && responseData.errors.length > 0) {
+        setError(responseData.errors.join('. '));
+      } else {
+        setError(responseData?.message || 'Error al crear cliente');
+      }
       throw err;
     } finally {
       setLoading(false);
