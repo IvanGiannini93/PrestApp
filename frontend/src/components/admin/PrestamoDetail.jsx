@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import CuotaList from './CuotaList';
 import StatusBadge from '../common/StatusBadge';
+import Modal from '../common/Modal';
+import Button from '../common/Button';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
 /**
@@ -7,10 +10,15 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
  * @param {Object} props
  * @param {Object} props.prestamo - Datos del préstamo
  * @param {Function} props.onPagar - Callback al pagar una cuota
+ * @param {Function} props.onCancelar - Callback al cancelar el préstamo
  * @param {Function} props.onBack - Callback para volver
  */
-function PrestamoDetail({ prestamo, onPagar, onBack }) {
+function PrestamoDetail({ prestamo, onPagar, onCancelar, onBack }) {
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
   if (!prestamo) return null;
+
+  const canCancel = prestamo.estado !== 'COMPLETADO' && prestamo.estado !== 'CANCELADO';
 
   return (
     <div>
@@ -58,6 +66,29 @@ function PrestamoDetail({ prestamo, onPagar, onBack }) {
       </div>
 
       {prestamo.cuotas && <CuotaList cuotas={prestamo.cuotas} onPagar={onPagar} />}
+
+      {/* Botón cancelar */}
+      {canCancel && (
+        <div className="mt-6">
+          <Button variant="danger" onClick={() => setShowCancelModal(true)}>
+            Cancelar Préstamo
+          </Button>
+        </div>
+      )}
+
+      {/* Modal de confirmación */}
+      <Modal isOpen={showCancelModal} onClose={() => setShowCancelModal(false)} title="Cancelar Préstamo">
+        <p className="text-gray-600 mb-2">¿Estás seguro que querés cancelar este préstamo?</p>
+        <p className="text-sm text-gray-500 mb-6">Las cuotas pendientes se marcarán como canceladas. Esta acción no se puede deshacer.</p>
+        <div className="flex gap-3 justify-end">
+          <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+            Volver
+          </Button>
+          <Button variant="danger" onClick={() => { setShowCancelModal(false); onCancelar && onCancelar(prestamo.id); }}>
+            Confirmar Cancelación
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

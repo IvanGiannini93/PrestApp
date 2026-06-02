@@ -16,5 +16,8 @@ public enum EstadoCuota {
     PAGADA,
 
     /** Cuota no pagada cuya fecha de vencimiento ya pasó. */
-    EN_MORA
+    EN_MORA,
+
+    /** Cuota cancelada (préstamo cancelado). */
+    CANCELADA
 }

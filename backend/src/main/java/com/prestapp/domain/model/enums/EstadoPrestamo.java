@@ -16,5 +16,8 @@ public enum EstadoPrestamo {
     COMPLETADO,
 
     /** Préstamo con al menos una cuota vencida sin pagar. */
-    EN_MORA
+    EN_MORA,
+
+    /** Préstamo cancelado por el administrador. */
+    CANCELADO
 }

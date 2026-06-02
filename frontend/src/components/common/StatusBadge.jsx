@@ -10,6 +10,8 @@ function StatusBadge({ status }) {
     EN_MORA: 'bg-red-100 text-red-800',
     ACTIVO: 'bg-blue-100 text-blue-800',
     COMPLETADO: 'bg-green-100 text-green-800',
+    CANCELADO: 'bg-gray-100 text-gray-800',
+    CANCELADA: 'bg-gray-100 text-gray-800',
   };
 
   const labels = {
@@ -18,6 +20,8 @@ function StatusBadge({ status }) {
     EN_MORA: 'En Mora',
     ACTIVO: 'Activo',
     COMPLETADO: 'Completado',
+    CANCELADO: 'Cancelado',
+    CANCELADA: 'Cancelada',
   };
 
   const style = styles[status] || 'bg-gray-100 text-gray-800';

@@ -6,6 +6,7 @@ import com.prestapp.application.mapper.PrestamoMapper;
 import com.prestapp.domain.model.Cliente;
 import com.prestapp.domain.model.Cuota;
 import com.prestapp.domain.model.Prestamo;
+import com.prestapp.domain.model.enums.EstadoCuota;
 import com.prestapp.domain.model.enums.EstadoPrestamo;
 import com.prestapp.domain.model.enums.FrecuenciaPago;
 import com.prestapp.domain.repository.ClienteRepository;
@@ -108,6 +109,48 @@ public class PrestamoUseCase {
     public PrestamoResponse obtenerDetalle(Long id) {
         Prestamo prestamo = prestamoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Préstamo", id));
+        return prestamoMapper.toResponse(prestamo, true);
+    }
+
+    /**
+     * Cancela un préstamo activo.
+     * <p>
+     * Marca el préstamo como CANCELADO y todas sus cuotas no pagadas
+     * como CANCELADA. Solo se puede cancelar un préstamo que no esté
+     * ya completado o cancelado.
+     * </p>
+     *
+     * @param id identificador del préstamo a cancelar
+     * @return DTO con el préstamo actualizado
+     * @throws ResourceNotFoundException si el préstamo no existe
+     * @throws com.prestapp.web.exception.BusinessException si el préstamo no se puede cancelar
+     */
+    @Transactional
+    public PrestamoResponse cancelar(Long id) {
+        Prestamo prestamo = prestamoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Préstamo", id));
+
+        if (prestamo.getEstado() == EstadoPrestamo.COMPLETADO) {
+            throw new com.prestapp.web.exception.BusinessException("No se puede cancelar un préstamo completado");
+        }
+        if (prestamo.getEstado() == EstadoPrestamo.CANCELADO) {
+            throw new com.prestapp.web.exception.BusinessException("El préstamo ya está cancelado");
+        }
+
+        // Cancelar cuotas no pagadas
+        List<Cuota> cuotas = cuotaRepository.findByPrestamoId(id);
+        for (Cuota cuota : cuotas) {
+            if (cuota.getEstado() != EstadoCuota.PAGADA) {
+                cuota.setEstado(EstadoCuota.CANCELADA);
+                cuotaRepository.save(cuota);
+            }
+        }
+
+        // Cancelar préstamo
+        prestamo.setEstado(EstadoPrestamo.CANCELADO);
+        prestamo.setSaldoRestante(java.math.BigDecimal.ZERO);
+        prestamoRepository.save(prestamo);
+
         return prestamoMapper.toResponse(prestamo, true);
     }
 }

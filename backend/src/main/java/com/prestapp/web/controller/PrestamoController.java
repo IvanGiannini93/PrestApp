@@ -70,4 +70,16 @@ public class PrestamoController {
         PrestamoResponse response = prestamoUseCase.obtenerDetalle(id);
         return ResponseEntity.ok(ApiResponse.success(response, "Préstamo obtenido exitosamente"));
     }
+
+    /**
+     * Cancela un préstamo activo.
+     *
+     * @param id identificador del préstamo
+     * @return préstamo cancelado
+     */
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<ApiResponse<PrestamoResponse>> cancelar(@PathVariable Long id) {
+        PrestamoResponse response = prestamoUseCase.cancelar(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Préstamo cancelado exitosamente"));
+    }
 }

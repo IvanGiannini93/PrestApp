@@ -5,6 +5,7 @@ import PrestamoDetail from '../../components/admin/PrestamoDetail';
 import Pagination from '../../components/common/Pagination';
 import { usePrestamos } from '../../hooks/usePrestamos';
 import { registrarPago } from '../../api/cuotaApi';
+import api from '../../api/axiosConfig';
 
 /**
  * Página de gestión de préstamos (admin).
@@ -37,8 +38,16 @@ function PrestamosPage() {
     } catch (err) { /* handled */ }
   };
 
+  const handleCancelar = async (prestamoId) => {
+    try {
+      await api.patch(`/prestamos/${prestamoId}/cancelar`);
+      setView('list');
+      fetchPrestamos(page);
+    } catch (err) { /* handled */ }
+  };
+
   if (view === 'detail' && prestamoActual) {
-    return <PrestamoDetail prestamo={prestamoActual} onPagar={handlePagar} onBack={() => setView('list')} />;
+    return <PrestamoDetail prestamo={prestamoActual} onPagar={handlePagar} onCancelar={handleCancelar} onBack={() => setView('list')} />;
   }
 
   return (
