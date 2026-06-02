@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/recuperar-password").permitAll()
                         .requestMatchers("/api/v1/auth/reset-password").permitAll()
                         .requestMatchers("/api/v1/auth/cambiar-password").authenticated()
+                        .requestMatchers("/api/v1/auth/perfil").authenticated()
                         .requestMatchers("/api/v1/clientes/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/prestamos/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/cuotas/**").hasRole("ADMIN")

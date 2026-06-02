@@ -3,6 +3,7 @@ package com.prestapp.application.usecase;
 import com.prestapp.application.dto.request.LoginRequest;
 import com.prestapp.application.dto.response.LoginResponse;
 import com.prestapp.domain.model.Usuario;
+import com.prestapp.domain.repository.ClienteRepository;
 import com.prestapp.domain.repository.UsuarioRepository;
 import com.prestapp.infrastructure.external.EmailService;
 import com.prestapp.infrastructure.security.JwtTokenProvider;
@@ -30,6 +31,7 @@ import java.time.LocalDateTime;
 public class AuthUseCase {
 
     private final UsuarioRepository usuarioRepository;
+    private final ClienteRepository clienteRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -199,5 +201,34 @@ public class AuthUseCase {
         }
         // Para admin u otros, no tenemos email directo
         return null;
+    }
+
+    /**
+     * Obtiene los datos del perfil del usuario.
+     * Si es cliente, incluye datos del cliente (razón social, documento, teléfono, email).
+     *
+     * @param username nombre de usuario
+     * @return mapa con datos del perfil
+     */
+    @Transactional(readOnly = true)
+    public java.util.Map<String, Object> obtenerPerfil(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        java.util.Map<String, Object> perfil = new java.util.LinkedHashMap<>();
+        perfil.put("username", usuario.getUsername());
+        perfil.put("createdAt", usuario.getCreatedAt());
+
+        if (usuario.getClienteId() != null) {
+            clienteRepository.findById(usuario.getClienteId()).ifPresent(cliente -> {
+                perfil.put("documento", cliente.getDocumento());
+                perfil.put("razonSocial", cliente.getRazonSocial());
+                perfil.put("responsable", cliente.getResponsable());
+                perfil.put("telefono", cliente.getTelefono());
+                perfil.put("email", cliente.getEmail());
+            });
+        }
+
+        return perfil;
     }
 }

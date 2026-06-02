@@ -64,6 +64,19 @@ public class AuthController {
     }
 
     /**
+     * Obtiene el perfil del usuario autenticado.
+     *
+     * @param user usuario autenticado
+     * @return datos del perfil
+     */
+    @GetMapping("/perfil")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> perfil(
+            @AuthenticationPrincipal JwtAuthenticatedUser user) {
+        Map<String, Object> perfil = authUseCase.obtenerPerfil(user.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(perfil, "Perfil obtenido"));
+    }
+
+    /**
      * Solicita la recuperación de contraseña.
      * Envía un código de 6 dígitos al email del usuario.
      *
