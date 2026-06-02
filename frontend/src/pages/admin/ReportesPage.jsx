@@ -106,9 +106,9 @@ function ReportesPage() {
 
       {/* Fila 2: Barras de cobro semanal + Línea acumulada */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Barras: cobrado vs esperado por semana */}
+        {/* Barras: recaudación semanal */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Cobro Semanal</h3>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">Recaudación Semanal</h3>
           {cobros.length === 0 ? (
             <p className="text-gray-400 text-center py-8">Sin datos</p>
           ) : (
@@ -118,9 +118,7 @@ function ReportesPage() {
                 <XAxis dataKey="semana" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
                 <Tooltip formatter={(value) => formatCurrency(value)} />
-                <Legend />
                 <Bar dataKey="cobrado" name="Cobrado" fill="#10b981" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="esperado" name="Esperado" fill="#d1d5db" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
