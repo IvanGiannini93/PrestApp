@@ -26,7 +26,7 @@ function PrestamoList({ prestamos, onSelect, onCancelar }) {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cuotas</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
+            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Acciones</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -40,8 +40,8 @@ function PrestamoList({ prestamos, onSelect, onCancelar }) {
                   {prestamo.cuotasPagadas}/{prestamo.totalCuotas}
                 </td>
                 <td className="px-6 py-4"><StatusBadge status={prestamo.estado} /></td>
-                <td className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-4">
+                <td className="px-6 py-4">
+                  <div className="flex justify-center gap-4">
                     <button
                       onClick={() => onSelect(prestamo)}
                       className="flex flex-col items-center gap-1 group"
