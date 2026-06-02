@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import Modal from './Modal';
+import Button from './Button';
 import logo from '../../resources/logos/logo.png';
 
 /**
@@ -11,6 +13,7 @@ function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [logoLoaded, setLogoLoaded] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -78,13 +81,26 @@ function Sidebar() {
           <span>Cambiar contraseña</span>
         </NavLink>
         <button
-          onClick={handleLogout}
+          onClick={() => setShowLogoutModal(true)}
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 w-full text-left transition-colors"
         >
           <span>🚪</span>
           <span>Cerrar sesión</span>
         </button>
       </div>
+
+      {/* Modal de confirmación de logout */}
+      <Modal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} title="Cerrar sesión">
+        <p className="text-gray-600 mb-6">¿Estás seguro que querés cerrar sesión?</p>
+        <div className="flex gap-3 justify-end">
+          <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleLogout}>
+            Cerrar sesión
+          </Button>
+        </div>
+      </Modal>
 
       {/* Usuario actual */}
       <div className="p-4 border-t border-gray-200 bg-gray-50">
