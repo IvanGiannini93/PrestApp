@@ -32,8 +32,8 @@ function LoginPage() {
 
     try {
       const response = await login(username, password);
-      const { token, rol, username: user } = response.data.data;
-      authLogin(token, { username: user, rol });
+      const { token, rol, username: user, displayName } = response.data.data;
+      authLogin(token, { username: user, rol, displayName });
 
       if (rol === 'ADMIN') {
         navigate('/admin/dashboard', { replace: true });

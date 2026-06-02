@@ -25,4 +25,7 @@ public class LoginResponse {
 
     /** Nombre de usuario autenticado. */
     private String username;
+
+    /** Nombre para mostrar (responsable del cliente o "Admin"). */
+    private String displayName;
 }

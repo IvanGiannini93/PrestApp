@@ -80,6 +80,7 @@ public class AuthUseCase {
                 .token(token)
                 .rol(usuario.getRol().name())
                 .username(usuario.getUsername())
+                .displayName(obtenerDisplayName(usuario))
                 .build();
     }
 
@@ -230,5 +231,18 @@ public class AuthUseCase {
         }
 
         return perfil;
+    }
+
+    /**
+     * Obtiene el nombre para mostrar del usuario.
+     * Para clientes devuelve el nombre del responsable, para admin devuelve "Admin".
+     */
+    private String obtenerDisplayName(Usuario usuario) {
+        if (usuario.getClienteId() != null) {
+            return clienteRepository.findById(usuario.getClienteId())
+                    .map(c -> c.getResponsable())
+                    .orElse(usuario.getUsername());
+        }
+        return "Admin";
     }
 }

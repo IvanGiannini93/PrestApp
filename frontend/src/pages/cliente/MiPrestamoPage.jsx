@@ -61,7 +61,7 @@ function MiPrestamoPage() {
     <div>
       {/* Header con saludo */}
       <div className="bg-gradient-to-r from-primary-700 to-primary-600 rounded-xl p-6 mb-6 text-white">
-        <h2 className="text-xl font-bold">Hola, {user?.username} 👋</h2>
+        <h2 className="text-xl font-bold">Hola, {user?.displayName || user?.username} 👋</h2>
         <p className="text-primary-200 text-sm mt-1 capitalize">{fechaFormateada}</p>
       </div>
 
