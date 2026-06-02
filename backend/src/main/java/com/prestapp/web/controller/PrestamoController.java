@@ -45,17 +45,19 @@ public class PrestamoController {
     }
 
     /**
-     * Lista préstamos activos con paginación.
+     * Lista préstamos con paginación, filtrados por estado.
      *
-     * @param page número de página (default 0)
-     * @param size tamaño de página (default 20)
-     * @return página de préstamos activos
+     * @param page   número de página (default 0)
+     * @param size   tamaño de página (default 20)
+     * @param estado estado a filtrar (default ACTIVO). Usar "TODOS" para todos.
+     * @return página de préstamos
      */
     @GetMapping
     public ResponseEntity<ApiResponse<Page<PrestamoResponse>>> listar(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        Page<PrestamoResponse> prestamos = prestamoUseCase.listarActivos(PageRequest.of(page, size));
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "ACTIVO") String estado) {
+        Page<PrestamoResponse> prestamos = prestamoUseCase.listarPorEstado(estado, PageRequest.of(page, size));
         return ResponseEntity.ok(ApiResponse.success(prestamos, "Préstamos obtenidos exitosamente"));
     }
 

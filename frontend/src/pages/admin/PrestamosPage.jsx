@@ -3,26 +3,41 @@ import PrestamoForm from '../../components/admin/PrestamoForm';
 import PrestamoList from '../../components/admin/PrestamoList';
 import PrestamoDetail from '../../components/admin/PrestamoDetail';
 import Pagination from '../../components/common/Pagination';
+import Tabs from '../../components/common/Tabs';
 import { usePrestamos } from '../../hooks/usePrestamos';
 import { registrarPago } from '../../api/cuotaApi';
 import api from '../../api/axiosConfig';
 
+const TABS = [
+  { key: 'ACTIVO', label: 'Activos' },
+  { key: 'EN_MORA', label: 'En Mora' },
+  { key: 'COMPLETADO', label: 'Completados' },
+  { key: 'CANCELADO', label: 'Cancelados' },
+  { key: 'TODOS', label: 'Todos' },
+];
+
 /**
- * Página de gestión de préstamos (admin).
+ * Página de gestión de préstamos (admin) con filtro por estado.
  */
 function PrestamosPage() {
   const { prestamos, prestamoActual, loading, error, totalPages, fetchPrestamos, fetchPrestamo, addPrestamo } = usePrestamos();
   const [showForm, setShowForm] = useState(false);
   const [page, setPage] = useState(0);
   const [view, setView] = useState('list');
+  const [activeTab, setActiveTab] = useState('ACTIVO');
 
-  useEffect(() => { fetchPrestamos(page); }, [fetchPrestamos, page]);
+  useEffect(() => { fetchPrestamos(page, 20, activeTab); }, [fetchPrestamos, page, activeTab]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setPage(0);
+  };
 
   const handleCrear = async (data) => {
     try {
       await addPrestamo(data);
       setShowForm(false);
-      fetchPrestamos(page);
+      fetchPrestamos(page, 20, activeTab);
     } catch (err) { /* handled by hook */ }
   };
 
@@ -42,7 +57,7 @@ function PrestamosPage() {
     try {
       await api.patch(`/prestamos/${prestamoId}/cancelar`);
       setView('list');
-      fetchPrestamos(page);
+      fetchPrestamos(page, 20, activeTab);
     } catch (err) { /* handled */ }
   };
 
@@ -81,6 +96,11 @@ function PrestamosPage() {
           <PrestamoForm onSubmit={handleCrear} loading={loading} />
         </div>
       )}
+
+      {/* Tabs de filtro */}
+      <div className="mb-4">
+        <Tabs tabs={TABS} activeTab={activeTab} onChange={handleTabChange} />
+      </div>
 
       <div className="bg-white rounded-lg shadow">
         <PrestamoList prestamos={prestamos} onSelect={handleSelect} />

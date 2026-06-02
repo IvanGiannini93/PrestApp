@@ -66,4 +66,12 @@ public interface PrestamoRepository {
      * @return lista de préstamos con ese estado
      */
     List<Prestamo> findAllByEstado(EstadoPrestamo estado);
+
+    /**
+     * Obtiene todos los préstamos con paginación.
+     *
+     * @param pageable configuración de paginación
+     * @return página de préstamos
+     */
+    Page<Prestamo> findAll(Pageable pageable);
 }

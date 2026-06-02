@@ -99,6 +99,25 @@ public class PrestamoUseCase {
     }
 
     /**
+     * Lista préstamos filtrados por estado con paginación.
+     * Si estado es "TODOS", devuelve todos los préstamos.
+     *
+     * @param estado   estado a filtrar o "TODOS"
+     * @param pageable configuración de paginación
+     * @return página de préstamos
+     */
+    @Transactional(readOnly = true)
+    public Page<PrestamoResponse> listarPorEstado(String estado, Pageable pageable) {
+        if ("TODOS".equalsIgnoreCase(estado)) {
+            return prestamoRepository.findAll(pageable)
+                    .map(prestamoMapper::toResponse);
+        }
+        EstadoPrestamo estadoEnum = EstadoPrestamo.valueOf(estado);
+        return prestamoRepository.findByEstado(estadoEnum, pageable)
+                .map(prestamoMapper::toResponse);
+    }
+
+    /**
      * Obtiene el detalle de un préstamo con sus cuotas.
      *
      * @param id identificador del préstamo

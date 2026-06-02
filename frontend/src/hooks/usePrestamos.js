@@ -13,13 +13,12 @@ export function usePrestamos() {
   const [error, setError] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchPrestamos = useCallback(async (page = 0, size = 20) => {
+  const fetchPrestamos = useCallback(async (page = 0, size = 20, estado = 'ACTIVO') => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getPrestamos(page, size);
+      const response = await getPrestamos(page, size, estado);
       const data = response.data.data;
-      // Spring Page response has content, totalPages, etc.
       if (data && data.content) {
         setPrestamos(data.content);
         setTotalPages(data.totalPages || 0);

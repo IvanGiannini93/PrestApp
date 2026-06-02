@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -109,19 +110,22 @@ public class PortalClienteController {
     }
 
     /**
-     * Obtiene el historial de préstamos completados del cliente logueado.
+     * Obtiene el historial de préstamos del cliente logueado filtrado por estado.
      *
-     * @param user usuario autenticado
-     * @return lista de préstamos completados ordenados por fecha descendente
+     * @param user   usuario autenticado
+     * @param estado estado a filtrar (default COMPLETADO)
+     * @return lista de préstamos ordenados por fecha descendente
      */
     @GetMapping("/mi-historial")
     public ResponseEntity<ApiResponse<List<PrestamoResponse>>> miHistorial(
-            @AuthenticationPrincipal JwtAuthenticatedUser user) {
+            @AuthenticationPrincipal JwtAuthenticatedUser user,
+            @RequestParam(defaultValue = "COMPLETADO") String estado) {
 
-        List<Prestamo> completados = prestamoRepository.findByClienteIdAndEstado(
-                user.getClienteId(), EstadoPrestamo.COMPLETADO);
+        EstadoPrestamo estadoEnum = EstadoPrestamo.valueOf(estado);
+        List<Prestamo> prestamos = prestamoRepository.findByClienteIdAndEstado(
+                user.getClienteId(), estadoEnum);
 
-        List<PrestamoResponse> response = completados.stream()
+        List<PrestamoResponse> response = prestamos.stream()
                 .map(prestamoMapper::toResponse)
                 .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
                 .toList();
