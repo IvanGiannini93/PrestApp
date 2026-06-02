@@ -57,6 +57,10 @@ public class CuotaUseCase {
             throw new BusinessException("La cuota #" + cuota.getNumeroCuota() + " ya fue pagada");
         }
 
+        if (cuota.getEstado() == EstadoCuota.CANCELADA) {
+            throw new BusinessException("La cuota #" + cuota.getNumeroCuota() + " está cancelada y no se puede pagar");
+        }
+
         // Marcar cuota como pagada
         cuota.setEstado(EstadoCuota.PAGADA);
         cuota.setFechaPago(LocalDate.now());

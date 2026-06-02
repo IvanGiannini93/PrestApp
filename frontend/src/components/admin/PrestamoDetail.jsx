@@ -65,7 +65,7 @@ function PrestamoDetail({ prestamo, onPagar, onCancelar, onBack }) {
         </div>
       </div>
 
-      {prestamo.cuotas && <CuotaList cuotas={prestamo.cuotas} onPagar={onPagar} />}
+      {prestamo.cuotas && <CuotaList cuotas={prestamo.cuotas} onPagar={canCancel ? onPagar : null} />}
 
       {/* Botón cancelar */}
       {canCancel && (
