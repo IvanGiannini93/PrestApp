@@ -65,6 +65,11 @@ function DashboardPage() {
       {reporte && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">Cobrado</p>
+            <p className="text-xl font-bold text-green-600 mt-1">{formatCurrency(reporte.montoPagadas)}</p>
+            <p className="text-xs text-gray-400 mt-1">{reporte.cantidadPagadas} cuotas</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
             <p className="text-xs text-gray-500 uppercase tracking-wide">Pendiente</p>
             <p className="text-xl font-bold text-yellow-600 mt-1">{formatCurrency(reporte.montoPendientes)}</p>
             <p className="text-xs text-gray-400 mt-1">{reporte.cantidadPendientes} cuotas</p>
@@ -73,11 +78,6 @@ function DashboardPage() {
             <p className="text-xs text-gray-500 uppercase tracking-wide">Vencido</p>
             <p className="text-xl font-bold text-red-600 mt-1">{formatCurrency(reporte.montoVencidas)}</p>
             <p className="text-xs text-gray-400 mt-1">{reporte.cantidadVencidas} cuotas</p>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Total cartera</p>
-            <p className="text-xl font-bold text-gray-800 mt-1">{formatCurrency(reporte.montoTotal)}</p>
-            <p className="text-xs text-gray-400 mt-1">Capital activo</p>
           </div>
         </div>
       )}
