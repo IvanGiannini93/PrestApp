@@ -154,12 +154,12 @@ public class ReporteUseCase {
         List<Cuota> todasLasCuotas = cuotaRepository.findAllByPrestamoEstadoActivo();
         // También incluir cuotas de préstamos completados para histórico
         LocalDate hoy = LocalDate.now();
-        LocalDate inicio = hoy.minusWeeks(7); // 8 semanas atrás
+        LocalDate inicio = hoy.minusWeeks(11); // 12 semanas atrás
 
         List<com.prestapp.application.dto.response.CobroSemanalResponse> resultado = new java.util.ArrayList<>();
         BigDecimal acumulado = BigDecimal.ZERO;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 12; i++) {
             LocalDate semanaInicio = inicio.plusWeeks(i);
             LocalDate semanaFin = semanaInicio.plusDays(6);
 

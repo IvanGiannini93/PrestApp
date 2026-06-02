@@ -124,22 +124,29 @@ function ReportesPage() {
           )}
         </div>
 
-        {/* Línea: cobro acumulado */}
+        {/* Línea: recaudación mensual */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Cobro Acumulado</h3>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">Recaudación Mensual</h3>
           {cobros.length === 0 ? (
             <p className="text-gray-400 text-center py-8">Sin datos</p>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={cobros}>
+              <LineChart data={cobros.reduce((meses, semana, idx) => {
+                const mesIdx = Math.floor(idx / 4);
+                if (!meses[mesIdx]) {
+                  meses[mesIdx] = { mes: `Mes ${mesIdx + 1}`, cobrado: 0 };
+                }
+                meses[mesIdx].cobrado += parseFloat(semana.cobrado) || 0;
+                return meses;
+              }, [])}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="semana" tick={{ fontSize: 12 }} />
+                <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
                 <Tooltip formatter={(value) => formatCurrency(value)} />
                 <Line
                   type="monotone"
-                  dataKey="acumulado"
-                  name="Acumulado"
+                  dataKey="cobrado"
+                  name="Recaudado"
                   stroke="#3b82f6"
                   strokeWidth={3}
                   dot={{ fill: '#3b82f6', r: 5 }}
