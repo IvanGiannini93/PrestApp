@@ -40,7 +40,7 @@ function Sidebar() {
     `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
       isActive
         ? 'bg-primary-100 text-primary-700'
-        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
     }`;
 
   return (

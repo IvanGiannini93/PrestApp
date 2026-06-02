@@ -8,7 +8,7 @@ import Sidebar from './Sidebar';
  */
 function Layout({ children }) {
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-[#f8faf9]">
       <div className="flex-shrink-0 overflow-y-auto">
         <Sidebar />
       </div>
