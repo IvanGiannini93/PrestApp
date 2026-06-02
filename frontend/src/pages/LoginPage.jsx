@@ -48,11 +48,11 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-sm w-full p-8 bg-white rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-gray-100 px-4">
+      <div className="max-w-sm w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
         <div className="text-center mb-6">
-          <img src={logoBanner} alt="PrestApp" className="w-44 mx-auto mb-2" />
-          <p className="text-sm text-gray-400">Gestión de Préstamos</p>
+          <img src={logoBanner} alt="PrestApp" className="w-44 mx-auto mb-3" />
+          <p className="text-sm text-gray-400">Sistema de gestión de préstamos</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
