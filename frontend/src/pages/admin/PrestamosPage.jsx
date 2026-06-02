@@ -98,26 +98,26 @@ function PrestamosPage() {
           onClick={() => setShowForm(!showForm)}
           className="flex flex-col items-center gap-1 group"
         >
-          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors shadow-sm">
+          <div className="w-12 h-12 rounded-full border-2 border-primary-300 flex items-center justify-center group-hover:bg-primary-50 group-hover:border-primary-500 transition-all">
             {showForm ? (
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
           </div>
-          <span className="text-xs text-gray-600 font-medium">{showForm ? 'Cancelar' : 'Nuevo Préstamo'}</span>
+          <span className="text-xs text-gray-500 font-medium">{showForm ? 'Cancelar' : 'Nuevo Préstamo'}</span>
         </button>
       </div>
 
-      {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">{error}</div>}
+      {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{error}</div>}
 
       {showForm && (
-        <div className="mb-6 p-4 bg-white rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Crear Préstamo</h3>
+        <div className="mb-6 p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
+          <h3 className="text-base font-semibold text-gray-700 mb-4">Crear Préstamo</h3>
           <PrestamoForm onSubmit={handleCrear} loading={loading} />
         </div>
       )}
@@ -127,7 +127,7 @@ function PrestamosPage() {
         <Tabs tabs={TABS} activeTab={activeTab} onChange={handleTabChange} counters={counters} />
       </div>
 
-      <div className="bg-white rounded-lg shadow">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
         <PrestamoList prestamos={prestamos} onSelect={handleSelect} onCancelar={handleCancelarFromList} />
       </div>
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />

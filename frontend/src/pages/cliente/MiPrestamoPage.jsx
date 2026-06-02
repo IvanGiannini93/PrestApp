@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 import PrestamoActivo from '../../components/cliente/PrestamoActivo';
 import CuotasPendientes from '../../components/cliente/CuotasPendientes';
 import { getMiPrestamo } from '../../api/cuotaApi';
@@ -6,14 +7,18 @@ import api from '../../api/axiosConfig';
 
 /**
  * Página del préstamo activo del cliente.
- * Muestra la lista de préstamos y al hacer click en uno despliega sus cuotas.
  */
 function MiPrestamoPage() {
+  const { user } = useAuth();
   const [prestamos, setPrestamos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [cuotasPrestamo, setCuotasPrestamo] = useState([]);
   const [loadingCuotas, setLoadingCuotas] = useState(false);
+
+  const hoy = new Date();
+  const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const fechaFormateada = hoy.toLocaleDateString('es-AR', opcionesFecha);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +59,13 @@ function MiPrestamoPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Mis Préstamos</h2>
+      {/* Header con saludo */}
+      <div className="bg-gradient-to-r from-primary-700 to-primary-600 rounded-xl p-6 mb-6 text-white">
+        <h2 className="text-xl font-bold">Hola, {user?.username} 👋</h2>
+        <p className="text-primary-200 text-sm mt-1 capitalize">{fechaFormateada}</p>
+      </div>
+
+      <h3 className="text-lg font-semibold text-gray-700 mb-4">Mis Préstamos</h3>
       <PrestamoActivo
         prestamos={prestamos}
         onSelect={handleToggle}
