@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controlador REST para reportes.
@@ -52,5 +53,16 @@ public class ReporteController {
             @RequestParam(defaultValue = "5") int limit) {
         List<ProximaCuotaResponse> response = reporteUseCase.proximasCuotas(limit);
         return ResponseEntity.ok(ApiResponse.success(response, "Próximas cuotas obtenidas"));
+    }
+
+    /**
+     * Obtiene contadores de préstamos por estado.
+     *
+     * @return mapa con estado -> cantidad
+     */
+    @GetMapping("/contadores-prestamos")
+    public ResponseEntity<ApiResponse<Map<String, Long>>> contadoresPrestamos() {
+        Map<String, Long> contadores = reporteUseCase.contadoresPorEstado();
+        return ResponseEntity.ok(ApiResponse.success(contadores, "Contadores obtenidos"));
     }
 }

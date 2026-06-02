@@ -4,7 +4,9 @@ import com.prestapp.application.dto.response.ProximaCuotaResponse;
 import com.prestapp.application.dto.response.ReporteCobranzaResponse;
 import com.prestapp.domain.model.Cuota;
 import com.prestapp.domain.model.enums.EstadoCuota;
+import com.prestapp.domain.model.enums.EstadoPrestamo;
 import com.prestapp.domain.repository.CuotaRepository;
+import com.prestapp.domain.repository.PrestamoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Caso de uso para generación de reportes de cobranza.
@@ -29,6 +33,7 @@ import java.util.List;
 public class ReporteUseCase {
 
     private final CuotaRepository cuotaRepository;
+    private final PrestamoRepository prestamoRepository;
 
     /**
      * Genera el reporte de cobranza con totales por categoría.
@@ -122,5 +127,20 @@ public class ReporteUseCase {
                 .frecuencia(cuota.getPrestamo().getFrecuencia().name())
                 .totalCuotas(cuota.getPrestamo().getPlazo())
                 .build();
+    }
+
+    /**
+     * Obtiene contadores de préstamos agrupados por estado.
+     *
+     * @return mapa con estado -> cantidad
+     */
+    @Transactional(readOnly = true)
+    public Map<String, Long> contadoresPorEstado() {
+        Map<String, Long> contadores = new LinkedHashMap<>();
+        for (EstadoPrestamo estado : EstadoPrestamo.values()) {
+            long count = prestamoRepository.findAllByEstado(estado).size();
+            contadores.put(estado.name(), count);
+        }
+        return contadores;
     }
 }

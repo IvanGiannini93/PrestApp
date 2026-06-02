@@ -28,8 +28,19 @@ function PrestamosPage() {
   const [view, setView] = useState('list');
   const [activeTab, setActiveTab] = useState('ACTIVO');
   const [cancelId, setCancelId] = useState(null);
+  const [counters, setCounters] = useState({});
 
   useEffect(() => { fetchPrestamos(page, 20, activeTab); }, [fetchPrestamos, page, activeTab]);
+
+  useEffect(() => {
+    api.get('/reportes/contadores-prestamos')
+      .then(res => {
+        const data = res.data.data;
+        const total = Object.values(data).reduce((sum, v) => sum + v, 0);
+        setCounters({ ...data, TODOS: total });
+      })
+      .catch(() => {});
+  }, [prestamos]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -113,7 +124,7 @@ function PrestamosPage() {
 
       {/* Tabs de filtro */}
       <div className="mb-4">
-        <Tabs tabs={TABS} activeTab={activeTab} onChange={handleTabChange} />
+        <Tabs tabs={TABS} activeTab={activeTab} onChange={handleTabChange} counters={counters} />
       </div>
 
       <div className="bg-white rounded-lg shadow">
