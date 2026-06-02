@@ -12,13 +12,14 @@ function ReportesPage() {
   const [reporte, setReporte] = useState(null);
   const [cobros, setCobros] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [semanas, setSemanas] = useState(8);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [repRes, cobrosRes] = await Promise.all([
           api.get('/reportes/cobranza'),
-          api.get('/reportes/cobros-semanal'),
+          api.get(`/reportes/cobros-semanal?weeks=${semanas}`),
         ]);
         setReporte(repRes.data.data);
         setCobros(cobrosRes.data.data || []);
@@ -29,7 +30,7 @@ function ReportesPage() {
       }
     };
     fetchData();
-  }, []);
+  }, [semanas]);
 
   if (loading) return <p className="text-gray-500 p-4">Cargando reportes...</p>;
 
@@ -108,7 +109,19 @@ function ReportesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Barras: recaudación semanal */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Recaudación Semanal</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-700">Recaudación Semanal</h3>
+            <div className="flex gap-1 bg-gray-100 rounded-md p-0.5">
+              {[4, 8, 12].map((w) => (
+                <button key={w} onClick={() => setSemanas(w)}
+                  className={`px-3 py-1 text-xs rounded-md transition-colors ${
+                    semanas === w ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-500'
+                  }`}>
+                  {w} sem
+                </button>
+              ))}
+            </div>
+          </div>
           {cobros.length === 0 ? (
             <p className="text-gray-400 text-center py-8">Sin datos</p>
           ) : (
@@ -131,14 +144,26 @@ function ReportesPage() {
             <p className="text-gray-400 text-center py-8">Sin datos</p>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={cobros.reduce((meses, semana, idx) => {
-                const mesIdx = Math.floor(idx / 4);
-                if (!meses[mesIdx]) {
-                  meses[mesIdx] = { mes: `Mes ${mesIdx + 1}`, cobrado: 0 };
-                }
-                meses[mesIdx].cobrado += parseFloat(semana.cobrado) || 0;
-                return meses;
-              }, [])}>
+              <LineChart data={(() => {
+                const mesesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                const mesesMap = {};
+                const hoy = new Date();
+                
+                cobros.forEach((semana) => {
+                  // Calcular el mes real de cada semana basándose en la posición
+                  const idx = cobros.indexOf(semana);
+                  const fecha = new Date(hoy);
+                  fecha.setDate(fecha.getDate() - (cobros.length - 1 - idx) * 7);
+                  const key = `${mesesNombres[fecha.getMonth()]} ${fecha.getFullYear()}`;
+                  
+                  if (!mesesMap[key]) {
+                    mesesMap[key] = { mes: mesesNombres[fecha.getMonth()], cobrado: 0 };
+                  }
+                  mesesMap[key].cobrado += parseFloat(semana.cobrado) || 0;
+                });
+                
+                return Object.values(mesesMap);
+              })()}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />

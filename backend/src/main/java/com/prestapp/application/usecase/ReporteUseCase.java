@@ -150,16 +150,16 @@ public class ReporteUseCase {
      * @return lista de cobros por semana con cobrado, esperado y acumulado
      */
     @Transactional(readOnly = true)
-    public List<com.prestapp.application.dto.response.CobroSemanalResponse> cobrosSemanal() {
+    public List<com.prestapp.application.dto.response.CobroSemanalResponse> cobrosSemanal(int weeks) {
         List<Cuota> todasLasCuotas = cuotaRepository.findAllByPrestamoEstadoActivo();
         // También incluir cuotas de préstamos completados para histórico
         LocalDate hoy = LocalDate.now();
-        LocalDate inicio = hoy.minusWeeks(11); // 12 semanas atrás
+        LocalDate inicio = hoy.minusWeeks(weeks - 1);
 
         List<com.prestapp.application.dto.response.CobroSemanalResponse> resultado = new java.util.ArrayList<>();
         BigDecimal acumulado = BigDecimal.ZERO;
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < weeks; i++) {
             LocalDate semanaInicio = inicio.plusWeeks(i);
             LocalDate semanaFin = semanaInicio.plusDays(6);
 

@@ -69,11 +69,13 @@ public class ReporteController {
     /**
      * Obtiene datos de cobros por semana para gráficos.
      *
+     * @param weeks cantidad de semanas (default 12)
      * @return lista de cobros semanales con cobrado, esperado y acumulado
      */
     @GetMapping("/cobros-semanal")
-    public ResponseEntity<ApiResponse<List<com.prestapp.application.dto.response.CobroSemanalResponse>>> cobrosSemanal() {
-        List<com.prestapp.application.dto.response.CobroSemanalResponse> response = reporteUseCase.cobrosSemanal();
+    public ResponseEntity<ApiResponse<List<com.prestapp.application.dto.response.CobroSemanalResponse>>> cobrosSemanal(
+            @RequestParam(defaultValue = "12") int weeks) {
+        List<com.prestapp.application.dto.response.CobroSemanalResponse> response = reporteUseCase.cobrosSemanal(weeks);
         return ResponseEntity.ok(ApiResponse.success(response, "Cobros semanales obtenidos"));
     }
 }
