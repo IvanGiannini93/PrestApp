@@ -66,6 +66,7 @@ public class PrestamoUseCase {
                 .plazo(request.getPlazo())
                 .frecuencia(frecuencia)
                 .fechaInicio(request.getFechaInicio())
+                .diasGracia(request.getDiasGracia() != null ? request.getDiasGracia() : 0)
                 .estado(EstadoPrestamo.ACTIVO)
                 .build();
 

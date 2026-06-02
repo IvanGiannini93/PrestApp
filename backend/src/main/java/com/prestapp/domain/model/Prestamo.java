@@ -55,9 +55,14 @@ public class Prestamo {
     @Column(nullable = false, length = 20)
     private FrecuenciaPago frecuencia;
 
-    /** Fecha de inicio del préstamo. */
+    /** Fecha de primer cobro del préstamo. */
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
+
+    /** Días de gracia después de la fecha de cobro para considerar vencida. */
+    @Column(name = "dias_gracia", nullable = false)
+    @Builder.Default
+    private Integer diasGracia = 0;
 
     /** Saldo restante por cobrar. */
     @Column(name = "saldo_restante", nullable = false, precision = 12, scale = 2)

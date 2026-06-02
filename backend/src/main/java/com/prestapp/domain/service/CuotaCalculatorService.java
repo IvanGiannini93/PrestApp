@@ -61,9 +61,10 @@ public class CuotaCalculatorService {
 
         for (int i = 1; i <= numeroCuotas; i++) {
             BigDecimal montoActual = (i == numeroCuotas) ? montoUltimaCuota : montoCuota;
-            LocalDate fechaVencimiento = calcularFechaVencimiento(
+            LocalDate fechaCobro = calcularFechaVencimiento(
                     prestamo.getFechaInicio(), prestamo.getFrecuencia(), i
             );
+            LocalDate fechaVencimiento = fechaCobro.plusDays(prestamo.getDiasGracia());
 
             Cuota cuota = Cuota.builder()
                     .prestamo(prestamo)
@@ -132,14 +133,18 @@ public class CuotaCalculatorService {
 
     /**
      * Calcula la fecha de vencimiento de una cuota específica.
+     * <p>
+     * La fecha de vencimiento = fecha de cobro + días de gracia.
+     * La fecha de cobro se calcula como: fechaPrimerCobro + (frecuencia × (numeroCuota - 1))
+     * </p>
      *
-     * @param fechaInicio fecha de inicio del préstamo
-     * @param frecuencia  frecuencia de pago
-     * @param numeroCuota número de la cuota (1-based)
+     * @param fechaPrimerCobro fecha del primer cobro del préstamo
+     * @param frecuencia       frecuencia de pago
+     * @param numeroCuota      número de la cuota (1-based)
      * @return fecha de vencimiento de la cuota
      */
-    private LocalDate calcularFechaVencimiento(LocalDate fechaInicio, FrecuenciaPago frecuencia, int numeroCuota) {
-        int diasOffset = frecuencia.getDiasEntreCuotas() * numeroCuota;
-        return fechaInicio.plusDays(diasOffset);
+    private LocalDate calcularFechaVencimiento(LocalDate fechaPrimerCobro, FrecuenciaPago frecuencia, int numeroCuota) {
+        int diasOffset = frecuencia.getDiasEntreCuotas() * (numeroCuota - 1);
+        return fechaPrimerCobro.plusDays(diasOffset);
     }
 }

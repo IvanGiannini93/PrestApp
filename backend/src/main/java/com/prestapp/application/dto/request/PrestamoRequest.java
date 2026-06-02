@@ -49,8 +49,13 @@ public class PrestamoRequest {
     @Pattern(regexp = "DIARIA|SEMANAL|QUINCENAL|MENSUAL", message = "La frecuencia debe ser DIARIA, SEMANAL, QUINCENAL o MENSUAL")
     private String frecuencia;
 
-    /** Fecha de inicio del préstamo. */
-    @NotNull(message = "La fecha de inicio es obligatoria")
-    @FutureOrPresent(message = "La fecha de inicio no puede ser anterior a hoy")
+    /** Fecha del primer cobro del préstamo. */
+    @NotNull(message = "La fecha de primer cobro es obligatoria")
+    @FutureOrPresent(message = "La fecha de primer cobro no puede ser anterior a hoy")
     private LocalDate fechaInicio;
+
+    /** Días de gracia después de la fecha de cobro (0 = sin gracia, máximo 30). */
+    @Min(value = 0, message = "Los días de gracia no pueden ser negativos")
+    @Max(value = 30, message = "Los días de gracia no pueden exceder 30")
+    private Integer diasGracia;
 }

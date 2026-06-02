@@ -13,7 +13,7 @@ import { formatCurrency } from '../../utils/formatters';
 function PrestamoForm({ onSubmit, loading }) {
   const [clientes, setClientes] = useState([]);
   const [form, setForm] = useState({
-    clienteId: '', monto: '', tasaInteres: '', plazo: '', frecuencia: 'SEMANAL', fechaInicio: ''
+    clienteId: '', monto: '', tasaInteres: '', plazo: '', frecuencia: 'SEMANAL', fechaInicio: '', diasGracia: '0'
   });
   const [preview, setPreview] = useState(null);
 
@@ -39,7 +39,7 @@ function PrestamoForm({ onSubmit, loading }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({ ...form, clienteId: parseInt(form.clienteId), monto: parseFloat(form.monto),
-      tasaInteres: parseFloat(form.tasaInteres), plazo: parseInt(form.plazo) });
+      tasaInteres: parseFloat(form.tasaInteres), plazo: parseInt(form.plazo), diasGracia: parseInt(form.diasGracia) || 0 });
   };
 
   const handleChange = (field) => (e) => setForm({ ...form, [field]: e.target.value });
@@ -74,14 +74,21 @@ function PrestamoForm({ onSubmit, loading }) {
           </select>
         </div>
       </div>
-      <Input label="Fecha de Inicio" id="fechaInicio" type="date" value={form.fechaInicio}
-        onChange={handleChange('fechaInicio')} required />
+      <div className="grid grid-cols-2 gap-4">
+        <Input label="Fecha primer cobro" id="fechaInicio" type="date" value={form.fechaInicio}
+          onChange={handleChange('fechaInicio')} required />
+        <Input label="Días de gracia" id="diasGracia" type="number" value={form.diasGracia}
+          onChange={handleChange('diasGracia')} placeholder="0" min="0" max="30" />
+      </div>
 
       {preview && (
         <div className="p-4 bg-blue-50 rounded-md">
           <p className="text-sm font-medium text-blue-800">Vista previa:</p>
           <p className="text-sm text-blue-700">Total a pagar: {formatCurrency(preview.total)}</p>
           <p className="text-sm text-blue-700">Cuotas: {preview.numCuotas} de {formatCurrency(preview.montoCuota)}</p>
+          {parseInt(form.diasGracia) > 0 && (
+            <p className="text-sm text-blue-700">Gracia: {form.diasGracia} días después de cada cobro</p>
+          )}
         </div>
       )}
 
