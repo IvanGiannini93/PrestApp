@@ -4,6 +4,8 @@ import PrestamoList from '../../components/admin/PrestamoList';
 import PrestamoDetail from '../../components/admin/PrestamoDetail';
 import Pagination from '../../components/common/Pagination';
 import Tabs from '../../components/common/Tabs';
+import Modal from '../../components/common/Modal';
+import Button from '../../components/common/Button';
 import { usePrestamos } from '../../hooks/usePrestamos';
 import { registrarPago } from '../../api/cuotaApi';
 import api from '../../api/axiosConfig';
@@ -25,6 +27,7 @@ function PrestamosPage() {
   const [page, setPage] = useState(0);
   const [view, setView] = useState('list');
   const [activeTab, setActiveTab] = useState('ACTIVO');
+  const [cancelId, setCancelId] = useState(null);
 
   useEffect(() => { fetchPrestamos(page, 20, activeTab); }, [fetchPrestamos, page, activeTab]);
 
@@ -59,6 +62,17 @@ function PrestamosPage() {
       setView('list');
       fetchPrestamos(page, 20, activeTab);
     } catch (err) { /* handled */ }
+  };
+
+  const handleCancelarFromList = (prestamoId) => {
+    setCancelId(prestamoId);
+  };
+
+  const confirmarCancelacion = async () => {
+    if (cancelId) {
+      await handleCancelar(cancelId);
+      setCancelId(null);
+    }
   };
 
   if (view === 'detail' && prestamoActual) {
@@ -103,9 +117,19 @@ function PrestamosPage() {
       </div>
 
       <div className="bg-white rounded-lg shadow">
-        <PrestamoList prestamos={prestamos} onSelect={handleSelect} />
+        <PrestamoList prestamos={prestamos} onSelect={handleSelect} onCancelar={handleCancelarFromList} />
       </div>
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+
+      {/* Modal de confirmación de cancelación */}
+      <Modal isOpen={!!cancelId} onClose={() => setCancelId(null)} title="Cancelar Préstamo">
+        <p className="text-gray-600 mb-2">¿Estás seguro que querés cancelar este préstamo?</p>
+        <p className="text-sm text-gray-500 mb-6">Las cuotas pendientes se marcarán como canceladas. Esta acción no se puede deshacer.</p>
+        <div className="flex gap-3 justify-end">
+          <Button variant="secondary" onClick={() => setCancelId(null)}>Volver</Button>
+          <Button variant="danger" onClick={confirmarCancelacion}>Confirmar Cancelación</Button>
+        </div>
+      </Modal>
     </div>
   );
 }
