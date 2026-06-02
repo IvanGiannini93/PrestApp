@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import api from '../../api/axiosConfig';
 import { formatCurrency } from '../../utils/formatters';
 
@@ -12,14 +12,13 @@ function ReportesPage() {
   const [reporte, setReporte] = useState(null);
   const [cobros, setCobros] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [semanas, setSemanas] = useState(8);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [repRes, cobrosRes] = await Promise.all([
           api.get('/reportes/cobranza'),
-          api.get(`/reportes/cobros-semanal?weeks=${semanas}`),
+          api.get('/reportes/cobros-semanal?weeks=4'),
         ]);
         setReporte(repRes.data.data);
         setCobros(cobrosRes.data.data || []);
@@ -30,7 +29,7 @@ function ReportesPage() {
       }
     };
     fetchData();
-  }, [semanas]);
+  }, []);
 
   if (loading) return <p className="text-gray-500 p-4">Cargando reportes...</p>;
 
@@ -72,14 +71,23 @@ function ReportesPage() {
                     ))}
                   </Pie>
                   <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           )}
-          {/* Total en el centro conceptual */}
+          {/* Leyenda manual */}
+          {donutData.length > 0 && (
+            <div className="flex justify-center gap-6 mt-2">
+              {donutData.map((entry, index) => (
+                <div key={entry.name} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS_DONUT[index] }}></div>
+                  <span className="text-sm text-gray-600">{entry.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
           {totalCobranza > 0 && (
-            <p className="text-center text-sm text-gray-500 mt-2">
+            <p className="text-center text-sm text-gray-500 mt-3">
               Total: {formatCurrency(totalCobranza)}
             </p>
           )}
@@ -105,82 +113,23 @@ function ReportesPage() {
         </div>
       </div>
 
-      {/* Fila 2: Barras de cobro semanal + Línea acumulada */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Barras: recaudación semanal */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-700">Recaudación Semanal</h3>
-            <div className="flex gap-1 bg-gray-100 rounded-md p-0.5">
-              {[4, 8, 12].map((w) => (
-                <button key={w} onClick={() => setSemanas(w)}
-                  className={`px-3 py-1 text-xs rounded-md transition-colors ${
-                    semanas === w ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-500'
-                  }`}>
-                  {w} sem
-                </button>
-              ))}
-            </div>
-          </div>
-          {cobros.length === 0 ? (
-            <p className="text-gray-400 text-center py-8">Sin datos</p>
-          ) : (
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={cobros}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="semana" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value) => formatCurrency(value)} />
-                <Bar dataKey="cobrado" name="Cobrado" fill="#10b981" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </div>
-
-        {/* Línea: recaudación mensual */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Recaudación Mensual</h3>
-          {cobros.length === 0 ? (
-            <p className="text-gray-400 text-center py-8">Sin datos</p>
-          ) : (
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={(() => {
-                const mesesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-                const mesesMap = {};
-                const hoy = new Date();
-                
-                cobros.forEach((semana) => {
-                  // Calcular el mes real de cada semana basándose en la posición
-                  const idx = cobros.indexOf(semana);
-                  const fecha = new Date(hoy);
-                  fecha.setDate(fecha.getDate() - (cobros.length - 1 - idx) * 7);
-                  const key = `${mesesNombres[fecha.getMonth()]} ${fecha.getFullYear()}`;
-                  
-                  if (!mesesMap[key]) {
-                    mesesMap[key] = { mes: mesesNombres[fecha.getMonth()], cobrado: 0 };
-                  }
-                  mesesMap[key].cobrado += parseFloat(semana.cobrado) || 0;
-                });
-                
-                return Object.values(mesesMap);
-              })()}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value) => formatCurrency(value)} />
-                <Line
-                  type="monotone"
-                  dataKey="cobrado"
-                  name="Recaudado"
-                  stroke="#3b82f6"
-                  strokeWidth={3}
-                  dot={{ fill: '#3b82f6', r: 5 }}
-                  activeDot={{ r: 7 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          )}
-        </div>
+      {/* Fila 2: Barras - últimas 4 semanas */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold text-gray-700 mb-1">Cobros últimas 4 semanas</h3>
+        <p className="text-sm text-gray-400 mb-4">Cuánto cobraste cada semana</p>
+        {cobros.length === 0 || cobros.every(c => parseFloat(c.cobrado) === 0) ? (
+          <p className="text-gray-400 text-center py-8">Todavía no hay cobros registrados</p>
+        ) : (
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={cobros}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+              <XAxis dataKey="semana" tick={{ fontSize: 13 }} />
+              <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
+              <Tooltip formatter={(value) => formatCurrency(value)} labelFormatter={(l) => `${l}`} />
+              <Bar dataKey="cobrado" name="Cobrado" fill="#10b981" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );
