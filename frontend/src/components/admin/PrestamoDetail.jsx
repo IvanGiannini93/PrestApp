@@ -41,8 +41,12 @@ function PrestamoDetail({ prestamo, onPagar, onBack }) {
             <p className="font-semibold">{prestamo.tasaInteres}%</p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Inicio</p>
+            <p className="text-sm text-gray-500">Primer cobro</p>
             <p className="font-semibold">{formatDate(prestamo.fechaInicio)}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Creado</p>
+            <p className="font-semibold">{formatDate(prestamo.createdAt)}</p>
           </div>
         </div>
 
