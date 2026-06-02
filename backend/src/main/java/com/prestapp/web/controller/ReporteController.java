@@ -65,4 +65,15 @@ public class ReporteController {
         Map<String, Long> contadores = reporteUseCase.contadoresPorEstado();
         return ResponseEntity.ok(ApiResponse.success(contadores, "Contadores obtenidos"));
     }
+
+    /**
+     * Obtiene datos de cobros por semana para gráficos.
+     *
+     * @return lista de cobros semanales con cobrado, esperado y acumulado
+     */
+    @GetMapping("/cobros-semanal")
+    public ResponseEntity<ApiResponse<List<com.prestapp.application.dto.response.CobroSemanalResponse>>> cobrosSemanal() {
+        List<com.prestapp.application.dto.response.CobroSemanalResponse> response = reporteUseCase.cobrosSemanal();
+        return ResponseEntity.ok(ApiResponse.success(response, "Cobros semanales obtenidos"));
+    }
 }

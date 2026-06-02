@@ -143,4 +143,53 @@ public class ReporteUseCase {
         }
         return contadores;
     }
+
+    /**
+     * Obtiene datos de cobros agrupados por semana (últimas 8 semanas).
+     *
+     * @return lista de cobros por semana con cobrado, esperado y acumulado
+     */
+    @Transactional(readOnly = true)
+    public List<com.prestapp.application.dto.response.CobroSemanalResponse> cobrosSemanal() {
+        List<Cuota> todasLasCuotas = cuotaRepository.findAllByPrestamoEstadoActivo();
+        // También incluir cuotas de préstamos completados para histórico
+        LocalDate hoy = LocalDate.now();
+        LocalDate inicio = hoy.minusWeeks(7); // 8 semanas atrás
+
+        List<com.prestapp.application.dto.response.CobroSemanalResponse> resultado = new java.util.ArrayList<>();
+        BigDecimal acumulado = BigDecimal.ZERO;
+
+        for (int i = 0; i < 8; i++) {
+            LocalDate semanaInicio = inicio.plusWeeks(i);
+            LocalDate semanaFin = semanaInicio.plusDays(6);
+
+            final LocalDate si = semanaInicio;
+            final LocalDate sf = semanaFin;
+
+            BigDecimal cobrado = todasLasCuotas.stream()
+                    .filter(c -> c.getFechaPago() != null
+                            && !c.getFechaPago().isBefore(si)
+                            && !c.getFechaPago().isAfter(sf))
+                    .map(Cuota::getMonto)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal esperado = todasLasCuotas.stream()
+                    .filter(c -> !c.getFechaVencimiento().isBefore(si)
+                            && !c.getFechaVencimiento().isAfter(sf))
+                    .map(Cuota::getMonto)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            acumulado = acumulado.add(cobrado);
+
+            String label = String.format("Sem %d", i + 1);
+            resultado.add(com.prestapp.application.dto.response.CobroSemanalResponse.builder()
+                    .semana(label)
+                    .cobrado(cobrado)
+                    .esperado(esperado)
+                    .acumulado(acumulado)
+                    .build());
+        }
+
+        return resultado;
+    }
 }
