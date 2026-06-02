@@ -27,7 +27,7 @@ function PrestamoDetail({ prestamo, onPagar, onBack }) {
           <StatusBadge status={prestamo.estado} />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mt-4">
           <div>
             <p className="text-sm text-gray-500">Monto</p>
             <p className="font-semibold">{formatCurrency(prestamo.monto)}</p>
