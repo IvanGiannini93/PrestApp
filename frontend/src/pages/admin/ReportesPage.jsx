@@ -135,7 +135,7 @@ function ReportesPage() {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h3 className="text-base font-semibold text-gray-700">Ingresos mensuales</h3>
-            <p className="text-xs text-gray-400">Cobro total (gris) vs ganancia neta (verde) por mes</p>
+            <p className="text-sm text-gray-600">Cobro total (gris) vs ganancia neta (verde) por mes</p>
           </div>
           {mesActual && parseFloat(mesActual.neto) > 0 && (
             <div className="text-right">
@@ -165,7 +165,9 @@ function ReportesPage() {
               />
               <Tooltip
                 formatter={(value, name) => [formatCurrency(value), name === 'bruto' ? 'Cobro total' : 'Ganancia neta']}
-                contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '14px', color: '#1f2937' }}
+                labelStyle={{ color: '#1f2937', fontWeight: 600 }}
+                itemStyle={{ color: '#374151' }}
               />
               <Legend
                 formatter={(value) => value === 'bruto' ? 'Cobro total' : 'Ganancia neta'}
