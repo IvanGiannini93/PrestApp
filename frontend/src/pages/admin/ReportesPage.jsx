@@ -42,6 +42,8 @@ function ReportesPage() {
 
   // Ganancia del mes actual
   const mesActual = ganancias.length > 0 ? ganancias[ganancias.length - 1] : null;
+  // Ganancia neta total (suma de todos los meses)
+  const gananciaTotalNeta = ganancias.reduce((sum, g) => sum + (parseFloat(g.neto) || 0), 0);
 
   return (
     <div>
@@ -139,8 +141,11 @@ function ReportesPage() {
           </div>
           {mesActual && parseFloat(mesActual.neto) > 0 && (
             <div className="text-right">
-              <p className="text-xs text-gray-400">Ganancia este mes</p>
+              <p className="text-xs text-gray-500">Ganancia este mes</p>
               <p className="text-lg font-bold text-primary-600">{formatCurrency(mesActual.neto)}</p>
+              {gananciaTotalNeta > 0 && (
+                <p className="text-xs text-gray-400 mt-1">Total acumulado: {formatCurrency(gananciaTotalNeta)}</p>
+              )}
             </div>
           )}
         </div>
@@ -173,9 +178,9 @@ function ReportesPage() {
                 formatter={(value) => value === 'bruto' ? 'Cobro total' : 'Ganancia neta'}
                 iconType="circle"
                 iconSize={10}
-                wrapperStyle={{ fontSize: '13px', color: '#374151' }}
+                wrapperStyle={{ fontSize: '14px', color: '#1f2937' }}
               />
-              <Bar dataKey="bruto" fill="#d1d5db" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="bruto" fill="#9ca3af" radius={[4, 4, 0, 0]} maxBarSize={40} />
               <Bar dataKey="neto" fill="#217a4b" radius={[4, 4, 0, 0]} maxBarSize={40} />
             </BarChart>
           </ResponsiveContainer>
