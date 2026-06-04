@@ -78,4 +78,13 @@ public class ReporteController {
         List<com.prestapp.application.dto.response.CobroSemanalResponse> response = reporteUseCase.cobrosSemanal(weeks);
         return ResponseEntity.ok(ApiResponse.success(response, "Cobros semanales obtenidos"));
     }
+
+    /**
+     * Obtiene ganancias mensuales (bruto y neto) de los últimos 6 meses.
+     */
+    @GetMapping("/ganancias-mensuales")
+    public ResponseEntity<ApiResponse<List<com.prestapp.application.dto.response.GananciaMensualResponse>>> gananciasMensuales() {
+        List<com.prestapp.application.dto.response.GananciaMensualResponse> response = reporteUseCase.gananciasMensuales();
+        return ResponseEntity.ok(ApiResponse.success(response, "Ganancias mensuales obtenidas"));
+    }
 }

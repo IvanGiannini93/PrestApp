@@ -1,50 +1,35 @@
 import { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import api from '../../api/axiosConfig';
 import { formatCurrency } from '../../utils/formatters';
 
 const COLORS_DONUT = ['#10b981', '#f59e0b', '#ef4444'];
-
-const RANGOS = [
-  { key: 4, label: '1 mes' },
-  { key: 8, label: '2 meses' },
-  { key: 12, label: '3 meses' },
-];
-
-/**
- * Tooltip personalizado para las barras.
- */
-function CustomBarTooltip({ active, payload, label }) {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-        <p className="text-sm font-medium text-gray-700">{label}</p>
-        <p className="text-lg font-bold text-green-600">{formatCurrency(payload[0].value)}</p>
-      </div>
-    );
-  }
-  return null;
-}
 
 /**
  * Página de reportes con gráficos de cobranza.
  */
 function ReportesPage() {
   const [reporte, setReporte] = useState(null);
-  const [cobros, setCobros] = useState([]);
+  const [ganancias, setGanancias] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [semanas, setSemanas] = useState(4);
 
   useEffect(() => {
-    api.get('/reportes/cobranza').then(res => setReporte(res.data.data)).catch(() => {});
+    const fetchData = async () => {
+      try {
+        const [repRes, ganRes] = await Promise.all([
+          api.get('/reportes/cobranza'),
+          api.get('/reportes/ganancias-mensuales'),
+        ]);
+        setReporte(repRes.data.data);
+        setGanancias(ganRes.data.data || []);
+      } catch (err) {
+        // handled
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    api.get(`/reportes/cobros-semanal?weeks=${semanas}`)
-      .then(res => setCobros(res.data.data || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [semanas]);
 
   if (loading) return <p className="text-gray-500 p-4">Cargando reportes...</p>;
 
@@ -55,8 +40,8 @@ function ReportesPage() {
     { name: 'Vencido', value: parseFloat(reporte.montoVencidas) || 0 },
   ].filter(d => d.value > 0) : [];
 
-  const totalCobranza = donutData.reduce((sum, d) => sum + d.value, 0);
-  const hayCobros = cobros.some(c => parseFloat(c.cobrado) > 0);
+  // Ganancia del mes actual
+  const mesActual = ganancias.length > 0 ? ganancias[ganancias.length - 1] : null;
 
   return (
     <div>
@@ -65,7 +50,7 @@ function ReportesPage() {
       {/* Fila 1: Donut + Cards resumen */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Donut de cobranza */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
           <h3 className="text-base font-semibold text-gray-700 mb-4">Distribución de Cobranza</h3>
           {donutData.length === 0 ? (
             <p className="text-gray-400 text-center py-8">Sin datos</p>
@@ -92,7 +77,6 @@ function ReportesPage() {
               </ResponsiveContainer>
             </div>
           )}
-          {/* Leyenda */}
           {donutData.length > 0 && (
             <div className="flex justify-center gap-5 mt-3">
               {donutData.map((entry, index) => (
@@ -146,39 +130,30 @@ function ReportesPage() {
         </div>
       </div>
 
-      {/* Fila 2: Barras con selector de rango */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      {/* Fila 2: Ganancias mensuales */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-base font-semibold text-gray-700">Cobros por semana</h3>
-            <p className="text-xs text-gray-400">Monto total cobrado cada semana</p>
+            <h3 className="text-base font-semibold text-gray-700">Ingresos mensuales</h3>
+            <p className="text-xs text-gray-400">Cobro total (gris) vs ganancia neta (verde) por mes</p>
           </div>
-          <div className="flex bg-gray-100 rounded-lg p-0.5">
-            {RANGOS.map((r) => (
-              <button
-                key={r.key}
-                onClick={() => setSemanas(r.key)}
-                className={`px-4 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                  semanas === r.key
-                    ? 'bg-white text-primary-700 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
+          {mesActual && parseFloat(mesActual.neto) > 0 && (
+            <div className="text-right">
+              <p className="text-xs text-gray-400">Ganancia este mes</p>
+              <p className="text-lg font-bold text-primary-600">{formatCurrency(mesActual.neto)}</p>
+            </div>
+          )}
         </div>
 
-        {!hayCobros ? (
+        {ganancias.every(g => parseFloat(g.bruto) === 0) ? (
           <p className="text-gray-400 text-center py-12">Todavía no hay cobros registrados</p>
         ) : (
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={cobros} barCategoryGap="20%">
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={ganancias} barCategoryGap="25%">
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
               <XAxis
-                dataKey="semana"
-                tick={{ fontSize: 12, fill: '#6b7280' }}
+                dataKey="mes"
+                tick={{ fontSize: 13, fill: '#6b7280' }}
                 axisLine={{ stroke: '#e5e7eb' }}
                 tickLine={false}
               />
@@ -188,8 +163,17 @@ function ReportesPage() {
                 tickLine={false}
                 tickFormatter={(v) => v > 0 ? `$${(v/1000).toFixed(0)}k` : '$0'}
               />
-              <Tooltip content={<CustomBarTooltip />} cursor={{ fill: '#f9fafb' }} />
-              <Bar dataKey="cobrado" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={50} />
+              <Tooltip
+                formatter={(value, name) => [formatCurrency(value), name === 'bruto' ? 'Cobro total' : 'Ganancia neta']}
+                contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
+              />
+              <Legend
+                formatter={(value) => value === 'bruto' ? 'Cobro total' : 'Ganancia neta'}
+                iconType="circle"
+                iconSize={8}
+              />
+              <Bar dataKey="bruto" fill="#d1d5db" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="neto" fill="#217a4b" radius={[4, 4, 0, 0]} maxBarSize={40} />
             </BarChart>
           </ResponsiveContainer>
         )}

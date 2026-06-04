@@ -192,4 +192,48 @@ public class ReporteUseCase {
 
         return resultado;
     }
+
+    /**
+     * Obtiene ganancias mensuales (bruto y neto) de los últimos 6 meses.
+     *
+     * @return lista de ganancias por mes
+     */
+    @Transactional(readOnly = true)
+    public List<com.prestapp.application.dto.response.GananciaMensualResponse> gananciasMensuales() {
+        List<Cuota> todasLasCuotas = cuotaRepository.findAllByPrestamoEstadoActivo();
+        String[] mesesNombres = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+        LocalDate hoy = LocalDate.now();
+
+        List<com.prestapp.application.dto.response.GananciaMensualResponse> result = new java.util.ArrayList<>();
+
+        for (int i = 5; i >= 0; i--) {
+            LocalDate mes = hoy.minusMonths(i);
+            int mesNum = mes.getMonthValue();
+            int anio = mes.getYear();
+
+            BigDecimal bruto = BigDecimal.ZERO;
+            BigDecimal neto = BigDecimal.ZERO;
+
+            for (Cuota cuota : todasLasCuotas) {
+                if (cuota.getFechaPago() != null
+                        && cuota.getFechaPago().getMonthValue() == mesNum
+                        && cuota.getFechaPago().getYear() == anio) {
+                    bruto = bruto.add(cuota.getMonto());
+                    BigDecimal tasa = cuota.getPrestamo().getTasaInteres();
+                    BigDecimal proporcionInteres = tasa.divide(
+                            tasa.add(BigDecimal.valueOf(100)), 10, java.math.RoundingMode.HALF_UP);
+                    neto = neto.add(cuota.getMonto().multiply(proporcionInteres)
+                            .setScale(2, java.math.RoundingMode.HALF_UP));
+                }
+            }
+
+            result.add(com.prestapp.application.dto.response.GananciaMensualResponse.builder()
+                    .mes(mesesNombres[mesNum - 1])
+                    .bruto(bruto)
+                    .neto(neto)
+                    .build());
+        }
+
+        return result;
+    }
 }
