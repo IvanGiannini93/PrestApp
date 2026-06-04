@@ -153,12 +153,12 @@ function ReportesPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
               <XAxis
                 dataKey="mes"
-                tick={{ fontSize: 13, fill: '#6b7280' }}
+                tick={{ fontSize: 14, fill: '#374151' }}
                 axisLine={{ stroke: '#e5e7eb' }}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: '#9ca3af' }}
+                tick={{ fontSize: 13, fill: '#6b7280' }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => v > 0 ? `$${(v/1000).toFixed(0)}k` : '$0'}
@@ -170,7 +170,8 @@ function ReportesPage() {
               <Legend
                 formatter={(value) => value === 'bruto' ? 'Cobro total' : 'Ganancia neta'}
                 iconType="circle"
-                iconSize={8}
+                iconSize={10}
+                wrapperStyle={{ fontSize: '13px', color: '#374151' }}
               />
               <Bar dataKey="bruto" fill="#d1d5db" radius={[4, 4, 0, 0]} maxBarSize={40} />
               <Bar dataKey="neto" fill="#217a4b" radius={[4, 4, 0, 0]} maxBarSize={40} />
