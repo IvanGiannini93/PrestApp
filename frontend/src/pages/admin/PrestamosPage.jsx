@@ -32,7 +32,7 @@ function PrestamosPage() {
   const [cancelId, setCancelId] = useState(null);
   const [counters, setCounters] = useState({});
 
-  useEffect(() => { fetchPrestamos(page, 20, activeTab); }, [fetchPrestamos, page, activeTab]);
+  useEffect(() => { fetchPrestamos(page, 10, activeTab); }, [fetchPrestamos, page, activeTab]);
 
   useEffect(() => {
     api.get('/reportes/contadores-prestamos')
@@ -53,7 +53,7 @@ function PrestamosPage() {
     try {
       await addPrestamo(data);
       setShowForm(false);
-      fetchPrestamos(page, 20, activeTab);
+      fetchPrestamos(page, 10, activeTab);
     } catch (err) { /* handled by hook */ }
   };
 
@@ -73,7 +73,7 @@ function PrestamosPage() {
     try {
       await api.patch(`/prestamos/${prestamoId}/cancelar`);
       setView('list');
-      fetchPrestamos(page, 20, activeTab);
+      fetchPrestamos(page, 10, activeTab);
     } catch (err) { /* handled */ }
   };
 

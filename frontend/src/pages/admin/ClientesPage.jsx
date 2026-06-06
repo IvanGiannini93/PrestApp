@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ClienteForm from '../../components/admin/ClienteForm';
 import ClienteList from '../../components/admin/ClienteList';
+import Pagination from '../../components/common/Pagination';
 import { useClientes } from '../../hooks/useClientes';
 
 /**
@@ -12,8 +13,13 @@ function ClientesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showForm, setShowForm] = useState(searchParams.get('nuevo') === 'true');
   const [successMsg, setSuccessMsg] = useState('');
+  const [page, setPage] = useState(0);
+  const pageSize = 10;
 
   useEffect(() => { fetchClientes(); }, [fetchClientes]);
+
+  const totalPages = Math.ceil(clientes.length / pageSize);
+  const clientesPaginados = clientes.slice(page * pageSize, (page + 1) * pageSize);
 
   const handleSubmit = async (data) => {
     try {
@@ -77,8 +83,9 @@ function ClientesPage() {
       )}
 
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <ClienteList clientes={clientes} />
+        <ClienteList clientes={clientesPaginados} />
       </div>
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }
