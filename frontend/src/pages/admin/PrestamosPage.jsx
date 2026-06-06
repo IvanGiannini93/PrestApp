@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import PrestamoForm from '../../components/admin/PrestamoForm';
 import PrestamoList from '../../components/admin/PrestamoList';
 import PrestamoDetail from '../../components/admin/PrestamoDetail';
@@ -23,7 +24,8 @@ const TABS = [
  */
 function PrestamosPage() {
   const { prestamos, prestamoActual, loading, error, totalPages, fetchPrestamos, fetchPrestamo, addPrestamo } = usePrestamos();
-  const [showForm, setShowForm] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [showForm, setShowForm] = useState(searchParams.get('nuevo') === 'true');
   const [page, setPage] = useState(0);
   const [view, setView] = useState('list');
   const [activeTab, setActiveTab] = useState('ACTIVO');

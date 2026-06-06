@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ClienteForm from '../../components/admin/ClienteForm';
 import ClienteList from '../../components/admin/ClienteList';
 import { useClientes } from '../../hooks/useClientes';
@@ -8,7 +9,8 @@ import { useClientes } from '../../hooks/useClientes';
  */
 function ClientesPage() {
   const { clientes, loading, error, fetchClientes, addCliente } = useClientes();
-  const [showForm, setShowForm] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showForm, setShowForm] = useState(searchParams.get('nuevo') === 'true');
   const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => { fetchClientes(); }, [fetchClientes]);
