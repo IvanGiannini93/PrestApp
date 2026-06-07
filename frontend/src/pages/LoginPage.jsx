@@ -52,7 +52,7 @@ function LoginPage() {
       <div className="max-w-sm w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
         <div className="text-center mb-6">
           <img src={logoBanner} alt="PrestApp" className="w-44 mx-auto mb-3" />
-          <p className="text-sm text-gray-400">Sistema de gestión de préstamos</p>
+          <p className="text-sm text-gray-400">Gestión y seguimiento de préstamos</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
