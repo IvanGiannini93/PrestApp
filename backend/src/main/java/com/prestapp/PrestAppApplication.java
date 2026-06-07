@@ -25,6 +25,7 @@ public class PrestAppApplication {
      * @param args argumentos de línea de comandos
      */
     public static void main(String[] args) {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
         SpringApplication.run(PrestAppApplication.class, args);
     }
 }
