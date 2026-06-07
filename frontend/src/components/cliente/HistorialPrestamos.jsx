@@ -28,7 +28,8 @@ function HistorialPrestamos({ prestamos, showStatus = false }) {
 
   const frecuenciaLabels = { DIARIA: 'Diaria', SEMANAL: 'Semanal', QUINCENAL: 'Quincenal', MENSUAL: 'Mensual' };
 
-  const renderCell = (row, key) => {
+  const renderCell = (row, key, index) => {
+    if (key === 'id') return index + 1;
     if (key === 'monto') return formatCurrency(row[key]);
     if (key === 'frecuencia') return frecuenciaLabels[row[key]] || row[key];
     if (key === 'totalCuotas') return row[key] || row.plazo;

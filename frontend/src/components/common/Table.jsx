@@ -39,7 +39,7 @@ function Table({ columns, data, onRowClick, renderCell }) {
             >
               {columns.map((col) => (
                 <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {renderCell ? renderCell(row, col.key) : row[col.key]}
+                  {renderCell ? renderCell(row, col.key, index) : row[col.key]}
                 </td>
               ))}
             </tr>
