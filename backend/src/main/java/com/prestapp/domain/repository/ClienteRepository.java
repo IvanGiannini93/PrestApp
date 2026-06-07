@@ -22,6 +22,14 @@ public interface ClienteRepository {
     List<Cliente> findAll();
 
     /**
+     * Obtiene clientes con paginación.
+     *
+     * @param pageable configuración de paginación
+     * @return página de clientes
+     */
+    org.springframework.data.domain.Page<Cliente> findAll(org.springframework.data.domain.Pageable pageable);
+
+    /**
      * Busca un cliente por su ID.
      *
      * @param id identificador del cliente

@@ -5,10 +5,12 @@ import api from './axiosConfig';
  */
 
 /**
- * Obtiene la lista de todos los clientes.
- * @returns {Promise} Lista de clientes
+ * Obtiene la lista de clientes paginada.
+ * @param {number} page - Número de página
+ * @param {number} size - Tamaño de página
+ * @returns {Promise} Página de clientes
  */
-export const getClientes = () => api.get('/clientes');
+export const getClientes = (page = 0, size = 10) => api.get(`/clientes?page=${page}&size=${size}`);
 
 /**
  * Obtiene un cliente por su ID.

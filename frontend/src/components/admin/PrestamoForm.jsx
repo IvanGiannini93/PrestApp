@@ -18,7 +18,10 @@ function PrestamoForm({ onSubmit, loading }) {
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {
-    getClientes().then(res => setClientes(res.data.data)).catch(() => {});
+    getClientes(0, 1000).then(res => {
+      const data = res.data.data;
+      setClientes(data.content || data || []);
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {

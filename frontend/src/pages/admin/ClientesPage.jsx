@@ -9,23 +9,20 @@ import { useClientes } from '../../hooks/useClientes';
  * Página de gestión de clientes (admin).
  */
 function ClientesPage() {
-  const { clientes, loading, error, fetchClientes, addCliente } = useClientes();
+  const { clientes, loading, error, totalPages, fetchClientes, addCliente } = useClientes();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showForm, setShowForm] = useState(searchParams.get('nuevo') === 'true');
   const [successMsg, setSuccessMsg] = useState('');
   const [page, setPage] = useState(0);
-  const pageSize = 10;
 
-  useEffect(() => { fetchClientes(); }, [fetchClientes]);
-
-  const totalPages = Math.ceil(clientes.length / pageSize);
-  const clientesPaginados = clientes.slice(page * pageSize, (page + 1) * pageSize);
+  useEffect(() => { fetchClientes(page, 10); }, [fetchClientes, page]);
 
   const handleSubmit = async (data) => {
     try {
       await addCliente(data);
       setShowForm(false);
       setSuccessMsg('Cliente registrado exitosamente');
+      fetchClientes(page, 10);
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
       // error handled by hook
@@ -83,7 +80,7 @@ function ClientesPage() {
       )}
 
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <ClienteList clientes={clientesPaginados} />
+        <ClienteList clientes={clientes} />
       </div>
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
     </div>

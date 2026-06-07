@@ -88,6 +88,18 @@ public class ClienteUseCase {
     }
 
     /**
+     * Obtiene clientes con paginación.
+     *
+     * @param pageable configuración de paginación
+     * @return página de clientes
+     */
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<ClienteResponse> listarPaginado(org.springframework.data.domain.Pageable pageable) {
+        return clienteRepository.findAll(pageable)
+                .map(clienteMapper::toResponse);
+    }
+
+    /**
      * Obtiene un cliente por su ID.
      *
      * @param id identificador del cliente

@@ -6,11 +6,11 @@ import com.prestapp.application.dto.response.ClienteResponse;
 import com.prestapp.application.usecase.ClienteUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Controlador REST para gestión de clientes.
@@ -45,13 +45,17 @@ public class ClienteController {
     }
 
     /**
-     * Lista todos los clientes registrados.
+     * Lista clientes con paginación.
      *
-     * @return lista de clientes
+     * @param page número de página (default 0)
+     * @param size tamaño de página (default 10)
+     * @return página de clientes
      */
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ClienteResponse>>> listar() {
-        List<ClienteResponse> clientes = clienteUseCase.listar();
+    public ResponseEntity<ApiResponse<Page<ClienteResponse>>> listar(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ClienteResponse> clientes = clienteUseCase.listarPaginado(PageRequest.of(page, size));
         return ResponseEntity.ok(ApiResponse.success(clientes, "Clientes obtenidos exitosamente"));
     }
 
