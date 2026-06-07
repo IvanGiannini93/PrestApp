@@ -49,10 +49,10 @@ public interface JpaCuotaRepository extends JpaRepository<Cuota, Long>, CuotaRep
     /**
      * {@inheritDoc}
      * <p>
-     * Obtiene todas las cuotas cuyos préstamos tienen estado ACTIVO.
+     * Obtiene todas las cuotas de préstamos activos y en mora.
      * </p>
      */
     @Override
-    @Query("SELECT c FROM Cuota c WHERE c.prestamo.estado = com.prestapp.domain.model.enums.EstadoPrestamo.ACTIVO")
+    @Query("SELECT c FROM Cuota c WHERE c.prestamo.estado IN (com.prestapp.domain.model.enums.EstadoPrestamo.ACTIVO, com.prestapp.domain.model.enums.EstadoPrestamo.EN_MORA)")
     List<Cuota> findAllByPrestamoEstadoActivo();
 }
