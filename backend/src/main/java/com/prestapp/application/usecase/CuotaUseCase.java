@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Caso de uso para gestión de cuotas y registro de pagos.
@@ -70,12 +71,18 @@ public class CuotaUseCase {
         Prestamo prestamo = cuota.getPrestamo();
         prestamo.setSaldoRestante(prestamo.getSaldoRestante().subtract(cuota.getMonto()));
         
-        // Verificar si todas las cuotas están pagadas
-        boolean todasPagadas = cuotaRepository.findByPrestamoId(prestamo.getId()).stream()
+        // Recalcular estado del préstamo
+        List<Cuota> todasLasCuotas = cuotaRepository.findByPrestamoId(prestamo.getId());
+        
+        boolean todasPagadas = todasLasCuotas.stream()
                 .allMatch(c -> c.getEstado() == EstadoCuota.PAGADA);
 
         if (todasPagadas) {
             prestamo.setEstado(EstadoPrestamo.COMPLETADO);
+        } else {
+            boolean hayEnMora = todasLasCuotas.stream()
+                    .anyMatch(c -> c.getEstado() == EstadoCuota.EN_MORA);
+            prestamo.setEstado(hayEnMora ? EstadoPrestamo.EN_MORA : EstadoPrestamo.ACTIVO);
         }
 
         prestamoRepository.save(prestamo);
