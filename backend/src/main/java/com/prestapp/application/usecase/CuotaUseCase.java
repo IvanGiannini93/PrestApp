@@ -64,7 +64,7 @@ public class CuotaUseCase {
 
         // Marcar cuota como pagada
         cuota.setEstado(EstadoCuota.PAGADA);
-        cuota.setFechaPago(LocalDate.now());
+        cuota.setFechaPago(LocalDate.now(java.time.ZoneId.of("America/Argentina/Buenos_Aires")));
         cuotaRepository.save(cuota);
 
         // Actualizar saldo del préstamo
