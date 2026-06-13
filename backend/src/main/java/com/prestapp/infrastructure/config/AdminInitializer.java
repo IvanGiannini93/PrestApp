@@ -15,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -61,6 +62,19 @@ public class AdminInitializer implements CommandLineRunner {
      * para corregir inconsistencias previas.
      */
     private void recalcularEstadosPrestamos() {
+        LocalDate hoy = LocalDate.now(java.time.ZoneId.of("America/Argentina/Buenos_Aires"));
+
+        // Primero: marcar cuotas vencidas como EN_MORA
+        List<Cuota> cuotasVencidas = cuotaRepository.findByFechaVencimientoBeforeAndEstado(hoy, EstadoCuota.PENDIENTE);
+        if (!cuotasVencidas.isEmpty()) {
+            for (Cuota cuota : cuotasVencidas) {
+                cuota.setEstado(EstadoCuota.EN_MORA);
+            }
+            cuotaRepository.saveAll(cuotasVencidas);
+            log.info("Se marcaron {} cuotas como EN_MORA al arrancar", cuotasVencidas.size());
+        }
+
+        // Segundo: recalcular estado de préstamos
         List<Prestamo> prestamos = prestamoRepository.findAllByEstado(EstadoPrestamo.EN_MORA);
         prestamos.addAll(prestamoRepository.findAllByEstado(EstadoPrestamo.ACTIVO));
 
