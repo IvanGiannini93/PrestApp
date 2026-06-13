@@ -28,8 +28,11 @@ public class PrestamoResponse {
     /** ID del cliente. */
     private Long clienteId;
 
-    /** Nombre del cliente (razón social). */
+    /** Nombre del cliente. */
     private String clienteNombre;
+
+    /** Apellido del cliente. */
+    private String clienteApellido;
 
     /** Documento del cliente. */
     private String clienteDocumento;

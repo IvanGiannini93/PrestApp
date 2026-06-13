@@ -50,8 +50,9 @@ public class PrestamoMapper {
                 .clienteId(prestamo.getCliente() != null ? prestamo.getCliente().getId() : null)
                 .clienteNombre(prestamo.getCliente() != null ?
                         (prestamo.getCliente().getNombre() != null ?
-                                prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido() :
+                                prestamo.getCliente().getNombre() :
                                 prestamo.getCliente().getRazonSocial()) : null)
+                .clienteApellido(prestamo.getCliente() != null ? prestamo.getCliente().getApellido() : null)
                 .clienteDocumento(prestamo.getCliente() != null ? prestamo.getCliente().getDocumento() : null)
                 .monto(prestamo.getMonto())
                 .tasaInteres(prestamo.getTasaInteres())

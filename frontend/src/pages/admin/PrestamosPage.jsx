@@ -31,7 +31,7 @@ function PrestamosPage() {
   const [activeTab, setActiveTab] = useState('ACTIVO');
   const [cancelId, setCancelId] = useState(null);
   const [counters, setCounters] = useState({});
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState({ nombre: '', apellido: '', documento: '' });
 
   useEffect(() => { fetchPrestamos(page, 10, activeTab); }, [fetchPrestamos, page, activeTab]);
 
@@ -45,13 +45,13 @@ function PrestamosPage() {
       .catch(() => {});
   }, [prestamos]);
 
-  // Filtrar préstamos por búsqueda (nombre o documento del cliente)
-  const prestamosFiltrados = search.trim()
-    ? prestamos.filter(p =>
-        (p.clienteNombre || '').toLowerCase().includes(search.toLowerCase()) ||
-        (p.clienteDocumento || '').includes(search)
-      )
-    : prestamos;
+  // Filtrar préstamos por búsqueda
+  const prestamosFiltrados = prestamos.filter(p => {
+    const matchNombre = !search.nombre || (p.clienteNombre || '').toLowerCase().includes(search.nombre.toLowerCase());
+    const matchApellido = !search.apellido || (p.clienteApellido || '').toLowerCase().includes(search.apellido.toLowerCase());
+    const matchDocumento = !search.documento || (p.clienteDocumento || '').includes(search.documento);
+    return matchNombre && matchApellido && matchDocumento;
+  });
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -144,16 +144,27 @@ function PrestamosPage() {
 
       {/* Búsqueda + Tabs */}
       <div className="mb-4 space-y-3">
-        <div className="relative">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+        <div className="grid grid-cols-3 gap-3">
           <input
             type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre o documento del cliente..."
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            value={search.nombre}
+            onChange={(e) => setSearch({ ...search, nombre: e.target.value })}
+            placeholder="Nombre"
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+          <input
+            type="text"
+            value={search.apellido}
+            onChange={(e) => setSearch({ ...search, apellido: e.target.value })}
+            placeholder="Apellido"
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+          <input
+            type="text"
+            value={search.documento}
+            onChange={(e) => setSearch({ ...search, documento: e.target.value })}
+            placeholder="Documento"
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
         <Tabs tabs={TABS} activeTab={activeTab} onChange={handleTabChange} counters={counters} />

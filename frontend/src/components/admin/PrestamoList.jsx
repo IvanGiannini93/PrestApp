@@ -34,7 +34,7 @@ function PrestamoList({ prestamos, onSelect, onCancelar }) {
             const canCancel = prestamo.estado !== 'COMPLETADO' && prestamo.estado !== 'CANCELADO';
             return (
               <tr key={prestamo.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{prestamo.clienteNombre}</td>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">{prestamo.clienteNombre} {prestamo.clienteApellido}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{formatCurrency(prestamo.monto)}</td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {prestamo.cuotasPagadas}/{prestamo.totalCuotas}
