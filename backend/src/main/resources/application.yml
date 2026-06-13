@@ -6,7 +6,7 @@ spring:
     name: prestapp-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/prestapp
+    url: jdbc:postgresql://localhost:5432/prestapp?currentSchema=public
     username: ${DB_USERNAME:prestapp}
     password: ${DB_PASSWORD:prestapp}
     driver-class-name: org.postgresql.Driver

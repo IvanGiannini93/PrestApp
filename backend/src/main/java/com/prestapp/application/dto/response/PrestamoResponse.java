@@ -31,6 +31,9 @@ public class PrestamoResponse {
     /** Nombre del cliente (razón social). */
     private String clienteNombre;
 
+    /** Documento del cliente. */
+    private String clienteDocumento;
+
     /** Monto del capital. */
     private BigDecimal monto;
 
