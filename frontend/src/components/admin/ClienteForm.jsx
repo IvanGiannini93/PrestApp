@@ -5,19 +5,18 @@ import { validateRequired, validateEmail, validatePhone } from '../../utils/vali
 
 /**
  * Formulario de alta de clientes.
- * @param {Object} props
- * @param {Function} props.onSubmit - Callback al enviar el formulario
- * @param {boolean} props.loading - Estado de carga
  */
 function ClienteForm({ onSubmit, loading }) {
-  const [form, setForm] = useState({ documento: '', razonSocial: '', responsable: '', telefono: '', email: '' });
+  const [form, setForm] = useState({
+    nombre: '', apellido: '', documento: '', telefono: '', email: '', razonSocial: ''
+  });
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
+    newErrors.nombre = validateRequired(form.nombre, 'Nombre');
+    newErrors.apellido = validateRequired(form.apellido, 'Apellido');
     newErrors.documento = validateRequired(form.documento, 'Documento');
-    newErrors.razonSocial = validateRequired(form.razonSocial, 'Razón social');
-    newErrors.responsable = validateRequired(form.responsable, 'Responsable');
     newErrors.telefono = validatePhone(form.telefono);
     newErrors.email = validateEmail(form.email);
 
@@ -39,17 +38,35 @@ function ClienteForm({ onSubmit, loading }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <Input label="Documento (DNI/CUIT)" id="documento" value={form.documento}
-        onChange={handleChange('documento')} error={errors.documento} placeholder="12345678 o 20-12345678-9" />
-      <Input label="Razón Social" id="razonSocial" value={form.razonSocial}
-        onChange={handleChange('razonSocial')} error={errors.razonSocial} placeholder="Nombre del comercio" />
-      <Input label="Responsable" id="responsable" value={form.responsable}
-        onChange={handleChange('responsable')} error={errors.responsable} placeholder="Persona responsable" />
-      <Input label="Teléfono" id="telefono" value={form.telefono}
-        onChange={handleChange('telefono')} error={errors.telefono} placeholder="+54 11 1234-5678" />
-      <Input label="Email" id="email" type="email" value={form.email}
-        onChange={handleChange('email')} error={errors.email} placeholder="contacto@comercio.com" />
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Datos personales */}
+      <div>
+        <p className="text-sm font-medium text-gray-600 mb-3">Datos personales</p>
+        <div className="grid grid-cols-2 gap-4">
+          <Input label="Nombre *" id="nombre" value={form.nombre}
+            onChange={handleChange('nombre')} error={errors.nombre} placeholder="Juan" />
+          <Input label="Apellido *" id="apellido" value={form.apellido}
+            onChange={handleChange('apellido')} error={errors.apellido} placeholder="Pérez" />
+        </div>
+        <div className="mt-3">
+          <Input label="Documento (DNI/CUIT) *" id="documento" value={form.documento}
+            onChange={handleChange('documento')} error={errors.documento} placeholder="12345678" />
+        </div>
+        <div className="grid grid-cols-2 gap-4 mt-3">
+          <Input label="Teléfono *" id="telefono" value={form.telefono}
+            onChange={handleChange('telefono')} error={errors.telefono} placeholder="1112345678" />
+          <Input label="Email *" id="email" type="email" value={form.email}
+            onChange={handleChange('email')} error={errors.email} placeholder="juan@email.com" />
+        </div>
+      </div>
+
+      {/* Datos del comercio */}
+      <div className="border-t pt-4">
+        <p className="text-sm font-medium text-gray-600 mb-3">Datos del comercio <span className="text-gray-400 font-normal">(opcional)</span></p>
+        <Input label="Nombre del comercio" id="razonSocial" value={form.razonSocial}
+          onChange={handleChange('razonSocial')} placeholder="Mi Negocio S.R.L." />
+      </div>
+
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? 'Registrando...' : 'Registrar Cliente'}
       </Button>

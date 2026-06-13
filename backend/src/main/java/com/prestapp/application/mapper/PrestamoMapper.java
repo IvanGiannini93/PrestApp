@@ -48,7 +48,10 @@ public class PrestamoMapper {
         PrestamoResponse.PrestamoResponseBuilder builder = PrestamoResponse.builder()
                 .id(prestamo.getId())
                 .clienteId(prestamo.getCliente() != null ? prestamo.getCliente().getId() : null)
-                .clienteNombre(prestamo.getCliente() != null ? prestamo.getCliente().getRazonSocial() : null)
+                .clienteNombre(prestamo.getCliente() != null ?
+                        (prestamo.getCliente().getNombre() != null ?
+                                prestamo.getCliente().getNombre() + " " + prestamo.getCliente().getApellido() :
+                                prestamo.getCliente().getRazonSocial()) : null)
                 .clienteDocumento(prestamo.getCliente() != null ? prestamo.getCliente().getDocumento() : null)
                 .monto(prestamo.getMonto())
                 .tasaInteres(prestamo.getTasaInteres())

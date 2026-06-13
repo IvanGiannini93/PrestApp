@@ -2,20 +2,18 @@ import Table from '../common/Table';
 
 /**
  * Lista de clientes en formato tabla.
- * @param {Object} props
- * @param {Array} props.clientes - Lista de clientes
- * @param {Function} props.onSelect - Callback al seleccionar un cliente
  */
 function ClienteList({ clientes, onSelect }) {
   const columns = [
+    { key: 'nombreCompleto', label: 'Nombre' },
     { key: 'documento', label: 'Documento' },
-    { key: 'razonSocial', label: 'Razón Social' },
-    { key: 'responsable', label: 'Responsable' },
+    { key: 'razonSocial', label: 'Comercio' },
     { key: 'telefono', label: 'Teléfono' },
     { key: 'email', label: 'Email' },
   ];
 
   const renderCell = (row, key) => {
+    if (key === 'razonSocial') return row[key] || '-';
     return row[key];
   };
 

@@ -9,9 +9,6 @@ import java.time.LocalDateTime;
 
 /**
  * DTO de respuesta con datos de un cliente.
- * <p>
- * Contiene la información del cliente para ser devuelta al frontend.
- * </p>
  */
 @Getter
 @NoArgsConstructor
@@ -19,24 +16,13 @@ import java.time.LocalDateTime;
 @Builder
 public class ClienteResponse {
 
-    /** Identificador del cliente. */
     private Long id;
-
-    /** Número de documento. */
+    private String nombre;
+    private String apellido;
+    private String nombreCompleto;
     private String documento;
-
-    /** Razón social del comercio. */
-    private String razonSocial;
-
-    /** Nombre de la persona responsable. */
-    private String responsable;
-
-    /** Número de teléfono de contacto. */
     private String telefono;
-
-    /** Correo electrónico de contacto. */
     private String email;
-
-    /** Fecha de registro del cliente. */
+    private String razonSocial;
     private LocalDateTime createdAt;
 }

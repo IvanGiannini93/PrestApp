@@ -7,28 +7,20 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper para conversión entre entidad Cliente y DTOs.
- * <p>
- * Convierte entre la entidad de dominio {@link Cliente} y los DTOs
- * de request/response de la capa de aplicación.
- * </p>
- *
- * @author PrestApp Team
- * @version 1.0.0
  */
 @Component
 public class ClienteMapper {
 
     /**
      * Convierte un DTO de request a entidad de dominio.
-     *
-     * @param request DTO con datos del cliente
-     * @return entidad Cliente
      */
     public Cliente toEntity(ClienteRequest request) {
         return Cliente.builder()
+                .nombre(request.getNombre())
+                .apellido(request.getApellido())
                 .documento(request.getDocumento())
                 .razonSocial(request.getRazonSocial())
-                .responsable(request.getResponsable())
+                .responsable(request.getNombre() + " " + request.getApellido())
                 .telefono(request.getTelefono())
                 .email(request.getEmail())
                 .build();
@@ -36,19 +28,32 @@ public class ClienteMapper {
 
     /**
      * Convierte una entidad de dominio a DTO de response.
-     *
-     * @param cliente entidad Cliente
-     * @return DTO con datos del cliente
      */
     public ClienteResponse toResponse(Cliente cliente) {
+        String nombreCompleto = buildNombreCompleto(cliente);
         return ClienteResponse.builder()
                 .id(cliente.getId())
+                .nombre(cliente.getNombre())
+                .apellido(cliente.getApellido())
+                .nombreCompleto(nombreCompleto)
                 .documento(cliente.getDocumento())
-                .razonSocial(cliente.getRazonSocial())
-                .responsable(cliente.getResponsable())
                 .telefono(cliente.getTelefono())
                 .email(cliente.getEmail())
+                .razonSocial(cliente.getRazonSocial())
                 .createdAt(cliente.getCreatedAt())
                 .build();
+    }
+
+    /**
+     * Construye el nombre completo del cliente.
+     */
+    private String buildNombreCompleto(Cliente cliente) {
+        if (cliente.getNombre() != null && cliente.getApellido() != null) {
+            return cliente.getNombre() + " " + cliente.getApellido();
+        }
+        if (cliente.getResponsable() != null) {
+            return cliente.getResponsable();
+        }
+        return cliente.getRazonSocial() != null ? cliente.getRazonSocial() : "Sin nombre";
     }
 }

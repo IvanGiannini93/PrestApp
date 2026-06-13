@@ -36,12 +36,20 @@ public class Cliente {
     @Column(nullable = false, unique = true, length = 20)
     private String documento;
 
-    /** Razón social o nombre del comercio. */
-    @Column(name = "razon_social", nullable = false, length = 150)
+    /** Nombre del cliente. */
+    @Column(nullable = false, length = 100)
+    private String nombre;
+
+    /** Apellido del cliente. */
+    @Column(nullable = false, length = 100)
+    private String apellido;
+
+    /** Razón social o nombre del comercio (opcional). */
+    @Column(name = "razon_social", length = 150)
     private String razonSocial;
 
-    /** Nombre de la persona responsable del comercio. */
-    @Column(nullable = false, length = 100)
+    /** Nombre de la persona responsable del comercio (legacy, opcional). */
+    @Column(length = 100)
     private String responsable;
 
     /** Número de teléfono de contacto. */
