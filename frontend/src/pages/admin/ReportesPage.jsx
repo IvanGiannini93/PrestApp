@@ -132,24 +132,28 @@ function ReportesPage() {
         </div>
       </div>
 
-      {/* Fila 2: Ganancias mensuales */}
+      {/* Fila 2: Cards de ganancias + Gráfico */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h3 className="text-base font-semibold text-gray-700">Ingresos mensuales</h3>
-            <p className="text-sm text-gray-600">Cobro total (gris) vs ganancia neta (verde) por mes</p>
+        <h3 className="text-base font-semibold text-gray-700 mb-1">Ingresos mensuales</h3>
+        <p className="text-sm text-gray-600 mb-5">Cobro total (gris) vs ganancia neta (verde) por mes</p>
+
+        {/* Cards de ganancias */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-primary-50 rounded-xl p-5 border border-primary-100">
+            <p className="text-xs text-primary-700 uppercase tracking-wide font-medium">Ganancia neta del mes</p>
+            <p className="text-2xl font-bold text-primary-700 mt-1">
+              {mesActual ? formatCurrency(mesActual.neto) : '$0'}
+            </p>
           </div>
-          {mesActual && parseFloat(mesActual.neto) > 0 && (
-            <div className="text-right">
-              <p className="text-xs text-gray-500">Ganancia este mes</p>
-              <p className="text-lg font-bold text-primary-600">{formatCurrency(mesActual.neto)}</p>
-              {gananciaTotalNeta > 0 && (
-                <p className="text-xs text-gray-400 mt-1">Total acumulado: {formatCurrency(gananciaTotalNeta)}</p>
-              )}
-            </div>
-          )}
+          <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+            <p className="text-xs text-gray-600 uppercase tracking-wide font-medium">Ganancia neta total</p>
+            <p className="text-2xl font-bold text-gray-800 mt-1">
+              {formatCurrency(gananciaTotalNeta)}
+            </p>
+          </div>
         </div>
 
+        {/* Gráfico */}
         {ganancias.every(g => parseFloat(g.bruto) === 0) ? (
           <p className="text-gray-400 text-center py-12">Todavía no hay cobros registrados</p>
         ) : (
