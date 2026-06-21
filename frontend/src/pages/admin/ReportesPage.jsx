@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import api from '../../api/axiosConfig';
 import { formatCurrency } from '../../utils/formatters';
 
@@ -151,7 +151,16 @@ function ReportesPage() {
       {/* Fila 3: Gráfico de barras */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
         <h3 className="text-base font-semibold text-gray-700 mb-1">Ingresos mensuales</h3>
-        <p className="text-sm text-gray-500 mb-5">Cobro total (gris) vs ganancia neta (verde)</p>
+        <div className="flex items-center gap-4 mb-5">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-[#6b7280]"></div>
+            <span className="text-sm text-gray-700">Cobro total</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-[#217a4b]"></div>
+            <span className="text-sm text-gray-700">Ganancia neta</span>
+          </div>
+        </div>
 
         {ganancias.every(g => parseFloat(g.bruto) === 0) ? (
           <p className="text-gray-400 text-center py-12">Todavía no hay cobros registrados</p>
@@ -177,13 +186,7 @@ function ReportesPage() {
                 labelStyle={{ color: '#1f2937', fontWeight: 600 }}
                 itemStyle={{ color: '#374151' }}
               />
-              <Legend
-                formatter={(value) => value === 'bruto' ? 'Cobro total' : 'Ganancia neta'}
-                iconType="circle"
-                iconSize={10}
-                wrapperStyle={{ fontSize: '14px', color: '#1f2937' }}
-              />
-              <Bar dataKey="bruto" fill="#9ca3af" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="bruto" fill="#6b7280" radius={[4, 4, 0, 0]} maxBarSize={40} />
               <Bar dataKey="neto" fill="#217a4b" radius={[4, 4, 0, 0]} maxBarSize={40} />
             </BarChart>
           </ResponsiveContainer>
