@@ -154,11 +154,11 @@ function ReportesPage() {
         <div className="flex items-center gap-4 mb-5">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-[#6b7280]"></div>
-            <span className="text-sm text-gray-700">Cobro total</span>
+            <span className="text-sm text-gray-700">Ingreso bruto</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-[#217a4b]"></div>
-            <span className="text-sm text-gray-700">Ganancia neta</span>
+            <span className="text-sm text-gray-700">Ingreso neto</span>
           </div>
         </div>
 
@@ -181,7 +181,7 @@ function ReportesPage() {
                 tickFormatter={(v) => v > 0 ? `$${(v/1000).toFixed(0)}k` : '$0'}
               />
               <Tooltip
-                formatter={(value, name) => [formatCurrency(value), name === 'bruto' ? 'Cobro total' : 'Ganancia neta']}
+                formatter={(value, name) => [formatCurrency(value), name === 'bruto' ? 'Ingreso bruto' : 'Ingreso neto']}
                 contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '14px', color: '#1f2937' }}
                 labelStyle={{ color: '#1f2937', fontWeight: 600 }}
                 itemStyle={{ color: '#374151' }}
